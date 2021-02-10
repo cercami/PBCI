@@ -255,7 +255,7 @@ for k in range(0, Nf):
 list_result_cca = []  # list to store the subject wise results
 list_time_cca = []
 num_iter = 0
-Ns = 1
+
 for s in range(0, Ns):
     mat_ind_max = np.zeros([Nf, Nb])  # index of maximum cca
     mat_time = np.zeros([Nf, Nb], dtype='object')  # matrix to store time needed
@@ -287,6 +287,7 @@ for s in range(0, Ns):
 
 mat_result_cca = np.concatenate(list_result_cca, axis=1)
 mat_time_cca = np.concatenate(list_time_cca, axis=1)
+
 ### analysis
 gof_cca = gof(vec_freq, mat_result_cca)
 accuracy_cca = accuracy(vec_freq, mat_result_cca)
