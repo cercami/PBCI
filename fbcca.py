@@ -309,14 +309,11 @@ mat_result_fbcca = np.concatenate(list_result_fbcca, axis=1)
 mat_time_fbcca = np.concatenate(list_time_fbcca, axis=1)
 
 ### analysis
-gof_fbcca = gof(vec_freq, mat_result_fbcca)
 accuracy_fbcca = accuracy(vec_freq, mat_result_fbcca)
-
-print("FBCCA: gof: " + str(gof_fbcca))
 print("FBCCA: accuracy: " + str(accuracy_fbcca))
 
 plt.figure()
 plt.imshow(mat_result_fbcca)
 
-np.save(os.path.join(dir_results, 'mat_result_fbcca_2'), mat_result_fbcca)
-np.save(os.path.join(dir_results, 'mat_time_fbcca_2'), mat_time_fbcca)
+np.save(os.path.join(dir_results, 'mat_result_fbcca'), mat_result_fbcca)
+np.save(os.path.join(dir_results, 'mat_time_fbcca'), mat_time_fbcca)

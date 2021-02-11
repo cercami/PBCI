@@ -149,7 +149,7 @@ def itr(df):
     P = df[0] / 100
     if P == 100.0:
         P = 0.99
-    T = 5 + 2
+    T = 2 + 2
     return (np.log2(M) + P * np.log2(P) + (1 - P) * np.log2((1 - P) / (M - 1))) * 60 / T
 
 
@@ -195,13 +195,11 @@ vec_phase = dict_freq_phase['phases'][0]
 
 # list_subject_data = loadData(dirname, '.mat')  # load all subject data
 mat_result_cca_phase = np.load(os.path.join(dir_results, 'mat_result_cca_phase.npy'))
-mat_result_fbcca_phase = np.load(os.path.join(dir_results, 'mat_result_fbcca_phase.npy'))
-mat_result_fbcca_2 = np.load(os.path.join(dir_results, 'mat_result_fbcca_2.npy'))
+mat_result_fbcca_phase = np.load(os.path.join(dir_results, 'mat_result_fbcca.npy'))
 mat_result_ad_cca = np.load(os.path.join(dir_results, 'mat_result_ad_cca.npy'))
 
 mat_time_cca_phase = np.load(os.path.join(dir_results, 'mat_time_cca_phase.npy'), allow_pickle=True)
-mat_time_fbcca_phase = np.load(os.path.join(dir_results, 'mat_time_fbcca_phase.npy'), allow_pickle=True)
-mat_time_fbcca_2 = np.load(os.path.join(dir_results, 'mat_time_fbcca_2.npy'), allow_pickle=True)
+mat_time_fbcca_phase = np.load(os.path.join(dir_results, 'mat_time_fbcca.npy'), allow_pickle=True)
 mat_time_ad_cca_phase = np.load(os.path.join(dir_results, 'mat_time_ad_cca_phase.npy'), allow_pickle=True)
 
 ## Convert to pandas dataframe
@@ -213,7 +211,6 @@ fs = 250  # sampling frequency in hz
 df_cca = make_df(mat_result_cca_phase, vec_freq, vec_phase, Nf, Ns, Nb, mat_time_cca_phase)
 df_ad_cca = make_df(mat_result_ad_cca, vec_freq, vec_phase, Nf, Ns, Nb, mat_time_ad_cca_phase)
 df_fbcca = make_df(mat_result_fbcca_phase, vec_freq, vec_phase, Nf, Ns, Nb, mat_time_fbcca_phase)
-df_fbcca_2 = make_df(mat_result_fbcca_2, vec_freq, vec_phase, Nf, Ns, Nb, mat_time_fbcca_2)
 
 # convert to subject wise representation
 df_subject = pd.DataFrame()
@@ -221,16 +218,13 @@ df_subject = pd.DataFrame()
 df_subject['Accuracy CCA'] = df_cca.groupby(['Subject']).sum()['Compare'] / (Nb * Nf) * 100
 df_subject['Accuracy Ad CCA'] = df_ad_cca.groupby(['Subject']).sum()['Compare'] / (Nb * Nf) * 100
 df_subject['Accuracy FBCCA'] = df_fbcca.groupby(['Subject']).sum()['Compare'] / (Nb * Nf) * 100
-df_subject['Accuracy FBCCA 2'] = df_fbcca_2.groupby(['Subject']).sum()['Compare'] / (Nb * Nf) * 100
 
 df_subject['Time CCA'] = df_cca.groupby(['Subject']).mean()['Time'] / 1000
 df_subject['Time FBCCA'] = df_fbcca.groupby(['Subject']).mean()['Time'] / 1000
-df_subject['Time FBCCA 2'] = df_fbcca_2.groupby(['Subject']).mean()['Time'] / 1000
 df_subject['Time Ad CCA'] = df_ad_cca.groupby(['Subject']).mean()['Time'] / 1000
 
 df_subject['ITR CCA'] = df_subject[['Accuracy CCA', 'Time CCA']].apply(itr, axis=1)
 df_subject['ITR FBCCA'] = df_subject[['Accuracy FBCCA', 'Time FBCCA']].apply(itr, axis=1)
-df_subject['ITR FBCCA 2'] = df_subject[['Accuracy FBCCA 2', 'Time FBCCA']].apply(itr, axis=1)
 df_subject['ITR Ad CCA'] = df_subject[['Accuracy Ad CCA', 'Time Ad CCA']].apply(itr, axis=1)
 
 # Plot
@@ -238,9 +232,9 @@ palette = sns.color_palette('Greys')
 
 fig1 = plt.figure()
 ax1 = fig1.add_subplot(111)
-sns.barplot(ax=ax1, data=df_subject[['Accuracy CCA', 'Accuracy FBCCA', 'Accuracy FBCCA 2', 'Accuracy Ad CCA']], ci=95, palette='Greys',
+sns.barplot(ax=ax1, data=df_subject[['Accuracy CCA', 'Accuracy FBCCA', 'Accuracy Ad CCA']], ci=95, palette='Greys',
             capsize=.1, orient='h')
-ax1.set_yticklabels(['CCA', 'FBCCA', 'Corrected \n FBCCA', 'Extended \n CCA'])
+ax1.set_yticklabels(['CCA', 'FBCCA', 'Extended \n CCA'])
 ax1.set_xlabel('Accuracy in %')
 set_style(fig1, ax1)
 set_size(fig1, 3, 2.2)
@@ -248,9 +242,9 @@ set_size(fig1, 3, 2.2)
 
 fig2 = plt.figure()
 ax2 = fig2.add_subplot(111)
-sns.barplot(ax=ax2, data=df_subject[['Time CCA', 'Time FBCCA', 'Time FBCCA 2', 'Time Ad CCA']], ci=95, palette='Greys', capsize=.1,
+sns.barplot(ax=ax2, data=df_subject[['Time CCA', 'Time FBCCA', 'Time Ad CCA']], ci=95, palette='Greys', capsize=.1,
             orient='h')
-ax2.set_yticklabels(['CCA', 'FBCCA', 'Corrected \n FBCCA', 'Extended \n CCA'])
+ax2.set_yticklabels(['CCA', 'FBCCA', 'Extended \n CCA'])
 ax2.set_xlabel('Time elapsed in s')
 set_style(fig2, ax2)
 set_size(fig2, 3, 2.2)
@@ -258,9 +252,9 @@ set_size(fig2, 3, 2.2)
 
 fig3 = plt.figure()
 ax3 = fig3.add_subplot(111)
-sns.barplot(ax=ax3, data=df_subject[['ITR CCA', 'ITR FBCCA', 'ITR FBCCA 2', 'ITR Ad CCA']], ci=95, palette='Greys', capsize=.1,
+sns.barplot(ax=ax3, data=df_subject[['ITR CCA', 'ITR FBCCA', 'ITR Ad CCA']], ci=95, palette='Greys', capsize=.1,
             orient='h')
-ax3.set_yticklabels(['CCA', 'FBCCA', 'Corrected \n FBCCA', 'Extended \n CCA'])
+ax3.set_yticklabels(['CCA', 'FBCCA', 'Extended \n CCA'])
 ax3.set_xlabel('ITR')
 set_style(fig3, ax3)
 set_size(fig3, 3, 2.2)
@@ -278,8 +272,6 @@ print(
     "Accuracy CCA Mean: " + str(df_subject['Accuracy CCA'].mean()) + ", Std: " + str(df_subject['Accuracy CCA'].std()))
 print("Accuracy FBCCA Mean: " + str(df_subject['Accuracy FBCCA'].mean()) + ", Std: " + str(
     df_subject['Accuracy FBCCA'].std()))
-print("Accuracy FBCCA corrected Mean: " + str(df_subject['Accuracy FBCCA 2'].mean()) + ", Std: " + str(
-    df_subject['Accuracy FBCCA 2'].std()))
 print("Accuracy Extended CCA Mean: " + str(df_subject['Accuracy Ad CCA'].mean()) + ", Std: " + str(
     df_subject['Accuracy Ad CCA'].std()))
 print("=====================================")
@@ -288,8 +280,6 @@ print(
     "Time CCA Mean: " + str(df_subject['Time CCA'].mean()) + ", Std: " + str(df_subject['Time CCA'].std()))
 print("Time FBCCA Mean: " + str(df_subject['Time FBCCA'].mean()) + ", Std: " + str(
     df_subject['Time FBCCA'].std()))
-print("Time FBCCA corrected Mean: " + str(df_subject['Time FBCCA 2'].mean()) + ", Std: " + str(
-    df_subject['Time FBCCA 2'].std()))
 print("Time Extended CCA Mean: " + str(df_subject['Time Ad CCA'].mean()) + ", Std: " + str(
     df_subject['Time Ad CCA'].std()))
 print("=====================================")
@@ -298,8 +288,6 @@ print(
     "ITR CCA Mean: " + str(df_subject['ITR CCA'].mean()) + ", Std: " + str(df_subject['ITR CCA'].std()))
 print("ITR FBCCA Mean: " + str(df_subject['ITR FBCCA'].mean()) + ", Std: " + str(
     df_subject['ITR FBCCA'].std()))
-print("ITR FBCCA corrected Mean: " + str(df_subject['ITR FBCCA 2'].mean()) + ", Std: " + str(
-    df_subject['ITR FBCCA 2'].std()))
 print("ITR Extended CCA Mean: " + str(df_subject['ITR Ad CCA'].mean()) + ", Std: " + str(
     df_subject['ITR Ad CCA'].std()))
 print("=====================================")
@@ -315,7 +303,3 @@ fig5.savefig(os.path.join(dir_figures, 'fbcca_freq.png'), dpi=300)
 fig6, ax6 = plot_trial(mat_result_ad_cca)
 fig6.savefig(os.path.join(dir_figures, 'ad_cca_freq.pdf'), dpi=300)
 fig6.savefig(os.path.join(dir_figures, 'ad_cca_freq.png'), dpi=300)
-
-fig7, ax7 = plot_trial(mat_result_fbcca_2)
-fig7.savefig(os.path.join(dir_figures, 'fbcca_2_freq.pdf'), dpi=300)
-fig7.savefig(os.path.join(dir_figures, 'fbcca_2_freq.png'), dpi=300)

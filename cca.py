@@ -62,8 +62,10 @@ def preprocess(mat_input, vec_pick_el, i_ref_el, n_start, n_stop):
         The preprocessed data.
     """
     ## Referencing and baseline correction
+    baseline = np.mean(np.mean(mat_input[:, 0:n_start], axis=0))  # get baseline (DC offset)
+    mat_input = mat_input - baseline  # apply baseline
+
     mat_output = mat_input - mat_input[i_ref_el, :]  # reference
-    baseline = np.mean(np.mean(mat_output[:, 0:n_start], axis=0))  # get baseline (DC offset)
     # mat_data = mat_data - np.mean(mat_data, axis=0) # common-average-referencing
     mat_output = mat_output[vec_pick_el, n_start:n_stop] - baseline  # channel selection
     return mat_output
@@ -234,7 +236,7 @@ ind_ref_el = df_location['Electrode'][df_location['Label'] == 'Cz'].index[0]  # 
 fs = 250  # sampling frequency in hz
 N_pre = int(0.5 * fs)  # pre stim
 N_delay = int(0.140 * fs)  # SSVEP delay
-N_stim = int(2 * fs)  # stimulation
+N_stim = int(5 * fs)  # stimulation
 N_start = N_pre + N_delay - 1
 N_stop = N_start + N_stim
 
@@ -255,9 +257,10 @@ for k in range(0, Nf):
 list_result_cca = []  # list to store the subject wise results
 list_time_cca = []
 num_iter = 0
-
+Ns = Ns
 for s in range(0, Ns):
     mat_ind_max = np.zeros([Nf, Nb])  # index of maximum cca
+    mat_bool = np.zeros([Nf, Nb])
     mat_time = np.zeros([Nf, Nb], dtype='object')  # matrix to store time needed
     t_start = datetime.now()
     for b in range(0, Nb):
@@ -268,6 +271,7 @@ for s in range(0, Ns):
 
             # Filter data
             mat_filt = mne.filter.filter_data(mat_data, fs, 7, 70, method='fir', phase='zero-double', verbose=False)
+
             vec_rho = np.zeros(Nf)
 
             # Apply CCA
@@ -277,6 +281,12 @@ for s in range(0, Ns):
             t_trial_end = datetime.now()
             mat_time[f, b] = t_trial_end - t_trial_start
             mat_ind_max[f, b] = np.argmax(vec_rho)  # get index of maximum -> frequency -> letter
+            mat_bool[f, b] = mat_ind_max[f, b].astype(int) == f
+            # apply threshold
+            thresh = 35
+            if (np.max(np.abs(mat_filt)) > thresh):
+                mat_bool[f, b] = -1
+
             num_iter = num_iter + 1
             print("CCA: Iteration " + str(num_iter) + " of " + str(Nf * Nb * Ns), flush=True)
 
@@ -288,15 +298,21 @@ for s in range(0, Ns):
 mat_result_cca = np.concatenate(list_result_cca, axis=1)
 mat_time_cca = np.concatenate(list_time_cca, axis=1)
 
+acc = lambda mat: np.sum(mat[mat > 0]) / (np.size(mat) - np.size(mat[mat == -1])) * 100
+
 ### analysis
 gof_cca = gof(vec_freq, mat_result_cca)
 accuracy_cca = accuracy(vec_freq, mat_result_cca)
-
+accuracy_cca_drop = acc(mat_bool)
 print("CCA: gof: " + str(gof_cca))
 print("CCA: accuracy: " + str(accuracy_cca))
+print("CCA: accuracy: " + str(accuracy_cca_drop))
 
 plt.figure()
 plt.imshow(mat_result_cca)
+
+plt.figure()
+plt.imshow(mat_bool)
 
 np.save(os.path.join(dir_results, 'mat_result_cca'), mat_result_cca)
 np.save(os.path.join(dir_results, 'mat_time_cca'), mat_time_cca)
