@@ -257,11 +257,13 @@ for k in range(0, Nf):
 list_result_cca = []  # list to store the subject wise results
 list_time_cca = []
 list_bool_result = []
+list_bool_thresh = []
 num_iter = 0
 Ns = Ns
 for s in range(0, Ns):
     mat_ind_max = np.zeros([Nf, Nb])  # index of maximum cca
     mat_bool = np.zeros([Nf, Nb])
+    mat_bool_thresh = np.zeros([Nf, Nb])
     mat_time = np.zeros([Nf, Nb], dtype='object')  # matrix to store time needed
     t_start = datetime.now()
     for b in range(0, Nb):
@@ -283,10 +285,12 @@ for s in range(0, Ns):
             mat_time[f, b] = t_trial_end - t_trial_start
             mat_ind_max[f, b] = np.argmax(vec_rho)  # get index of maximum -> frequency -> letter
             mat_bool[f, b] = mat_ind_max[f, b].astype(int) == f
+            mat_bool_thresh[f, b] = mat_ind_max[f, b].astype(int) == f
+
             # apply threshold
             thresh = 35
             if (np.max(np.abs(mat_filt)) > thresh):
-                mat_bool[f, b] = -1
+                mat_bool_thresh[f, b] = -1
 
             num_iter = num_iter + 1
             print("CCA: Iteration " + str(num_iter) + " of " + str(Nf * Nb * Ns), flush=True)
@@ -294,11 +298,15 @@ for s in range(0, Ns):
     list_time_cca.append(mat_time)
     list_result_cca.append(mat_ind_max)  # store results per subject
     list_bool_result.append(mat_bool)
+    list_bool_thresh.append(mat_bool_thresh)
+
     t_end = datetime.now()
     print("CCA: Elapsed time for subject: " + str(s + 1) + ": " + str((t_end - t_start)), flush=True)
 
 mat_result_cca = np.concatenate(list_result_cca, axis=1)
 mat_time_cca = np.concatenate(list_time_cca, axis=1)
+mat_bool_cca = np.concatenate(list_bool_result, axis=1)
+mat_bool_cca_thresh = np.concatenate(list_bool_thresh, axis=1)
 
 acc = lambda mat: np.sum(mat[mat > 0]) / (np.size(mat) - np.size(mat[mat == -1])) * 100
 
@@ -315,8 +323,9 @@ plt.figure()
 plt.imshow(mat_result_cca)
 
 plt.figure()
-plt.imshow(mat_bool)
+plt.imshow(mat_bool_cca)
 
 np.save(os.path.join(dir_results, 'mat_result_cca'), mat_result_cca)
 np.save(os.path.join(dir_results, 'mat_time_cca'), mat_time_cca)
-np.save(os.path.join(dir_results, 'mat_bool_cca'), mat_bool)
+np.save(os.path.join(dir_results, 'mat_bool_cca'), mat_bool_cca)
+np.save(os.path.join(dir_results, 'mat_bool_thresh_cca'), mat_bool_cca_thresh)
