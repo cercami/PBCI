@@ -256,6 +256,7 @@ for k in range(0, Nf):
 ### Frequency detection using CCA
 list_result_cca = []  # list to store the subject wise results
 list_time_cca = []
+list_bool_result = []
 num_iter = 0
 Ns = Ns
 for s in range(0, Ns):
@@ -292,6 +293,7 @@ for s in range(0, Ns):
 
     list_time_cca.append(mat_time)
     list_result_cca.append(mat_ind_max)  # store results per subject
+    list_bool_result.append(mat_bool)
     t_end = datetime.now()
     print("CCA: Elapsed time for subject: " + str(s + 1) + ": " + str((t_end - t_start)), flush=True)
 
@@ -304,9 +306,10 @@ acc = lambda mat: np.sum(mat[mat > 0]) / (np.size(mat) - np.size(mat[mat == -1])
 gof_cca = gof(vec_freq, mat_result_cca)
 accuracy_cca = accuracy(vec_freq, mat_result_cca)
 accuracy_cca_drop = acc(mat_bool)
+
 print("CCA: gof: " + str(gof_cca))
 print("CCA: accuracy: " + str(accuracy_cca))
-print("CCA: accuracy: " + str(accuracy_cca_drop))
+print("CCA: accuracy dropped: " + str(accuracy_cca_drop))
 
 plt.figure()
 plt.imshow(mat_result_cca)
@@ -316,3 +319,4 @@ plt.imshow(mat_bool)
 
 np.save(os.path.join(dir_results, 'mat_result_cca'), mat_result_cca)
 np.save(os.path.join(dir_results, 'mat_time_cca'), mat_time_cca)
+np.save(os.path.join(dir_results, 'mat_bool_cca'), mat_bool)
