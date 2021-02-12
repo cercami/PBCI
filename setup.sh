@@ -10,5 +10,8 @@ python3 -m venv pbci
 source pbci/bin/activate
 
 # install mne
-python3 -m pip install --user mne
-python3 -m pip install --user sklearn
+python3 -m pip3 install --user mne
+python3 -m pip3 install --user sklearn
+python3 -m pip3 install --user pandas
+python3 -m pip3 install --user seaborn
+
