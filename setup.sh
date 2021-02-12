@@ -11,3 +11,4 @@ source pbci/bin/activate
 
 # install mne
 python3 -m pip install mne
+python3 -m pip install sklearn
