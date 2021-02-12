@@ -237,9 +237,10 @@ vec_ind_el = df_location[df_location['Label'].isin(list_el)].index  # Vector wit
 ind_ref_el = df_location['Electrode'][df_location['Label'] == 'Cz'].index[0]  # Index of reference electrode 'Cz'
 
 fs = 250  # sampling frequency in hz
+N_sec = 1
 N_pre = int(0.5 * fs)  # pre stim
 N_delay = int(0.140 * fs)  # SSVEP delay
-N_stim = int(5 * fs)  # stimulation
+N_stim = int(N_sec * fs)  # stimulation
 N_start = N_pre + N_delay - 1
 N_stop = N_start + N_stim
 
@@ -257,15 +258,15 @@ for k in range(0, Nf):
         mat_Y[k, i, :] = np.cos(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
 
 ### Frequency detection using CCA
-list_result_cca = []  # list to store the subject wise results
 list_time_cca = []  # list to store the time used per trial
-list_bool_result = []   # list to store the classification as true/false
-list_bool_thresh = []   # list to store the classification with thresholds
+list_result_cca = []  # list to store the classification result
+list_bool_result = []  # list to store the classification as true/false
+list_bool_thresh = []  # list to store the classification with thresholds
 list_rho = []
 list_max = []
 
 num_iter = 0
-Ns = 1
+Ns = Ns
 for s in range(0, Ns):
     mat_ind_max = np.zeros([Nf, Nb])  # index of maximum cca
     mat_bool = np.zeros([Nf, Nb])
@@ -292,14 +293,14 @@ for s in range(0, Ns):
             t_trial_end = datetime.now()
             mat_time[f, b] = t_trial_end - t_trial_start
             mat_ind_max[f, b] = np.argmax(vec_rho)  # get index of maximum -> frequency -> letter
-            mat_bool[f, b] = mat_ind_max[f, b].astype(int) == f     # compare if classification is true
+            mat_bool[f, b] = mat_ind_max[f, b].astype(int) == f  # compare if classification is true
             mat_bool_thresh[f, b] = mat_ind_max[f, b].astype(int) == f
-            mat_max[f, b] = np.max(np.abs(mat_filt))
+            mat_max[f, b] = np.max(np.abs(mat_data))
             mat_rho[f, b] = np.max(vec_rho)
 
             # apply threshold
-            thresh = 35
-            if np.max(np.abs(mat_filt)) > thresh:
+            thresh = 45
+            if np.max(np.abs(mat_data)) > thresh:
                 # minus 1 if it is going to be removed
                 mat_bool_thresh[f, b] = -1
 
@@ -316,12 +317,11 @@ for s in range(0, Ns):
     t_end = datetime.now()
     print("CCA: Elapsed time for subject: " + str(s + 1) + ": " + str((t_end - t_start)), flush=True)
 
-
 mat_result_cca = np.concatenate(list_result_cca, axis=1)
 mat_time_cca = np.concatenate(list_time_cca, axis=1)
-mat_bool_cca = np.concatenate(list_bool_result, axis=1)
-mat_bool_cca_thresh = np.concatenate(list_bool_thresh, axis=1)
-
+mat_b_cca = np.concatenate(list_bool_result, axis=1)
+mat_b_cca_thresh = np.concatenate(list_bool_thresh, axis=1)
+mat_max_cca = np.concatenate(list_max, axis=1)
 
 ### analysis
 accuracy_cca = accuracy(vec_freq, mat_result_cca)
@@ -334,9 +334,10 @@ plt.figure()
 plt.imshow(mat_result_cca)
 
 plt.figure()
-plt.imshow(mat_bool_cca)
+plt.imshow(mat_b_cca)
 
-np.save(os.path.join(dir_results, 'mat_result_cca'), mat_result_cca)
-np.save(os.path.join(dir_results, 'mat_time_cca'), mat_time_cca)
-np.save(os.path.join(dir_results, 'mat_bool_cca'), mat_bool_cca)
-np.save(os.path.join(dir_results, 'mat_bool_thresh_cca'), mat_bool_cca_thresh)
+np.save(os.path.join(dir_results, 'cca_mat_result'), mat_result_cca)
+np.save(os.path.join(dir_results, 'cca_mat_time'), mat_time_cca)
+np.save(os.path.join(dir_results, 'cca_mat_b'), mat_b_cca)
+np.save(os.path.join(dir_results, 'cca_mat_b_thresh'), mat_b_cca_thresh)
+np.save(os.path.join(dir_results, 'cca_mat_max'), mat_max_cca)
