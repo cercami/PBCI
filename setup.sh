@@ -10,5 +10,5 @@ python3 -m venv pbci
 source pbci/bin/activate
 
 # install mne
-python3 -m pip install mne
-python3 -m pip install sklearn
+python3 -m pip install --user mne
+python3 -m pip install --user sklearn
