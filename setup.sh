@@ -10,11 +10,4 @@ python3 -m venv pbci
 source pbci/bin/activate
 
 # install mne
-pip install -U pip
-pip install -U setuptools
-pip install sklearn
-pip install seaborn
-pip install pandas
-pip install matplotlib
-pip install numpy
-pip install mne
+python -m pip install mne
