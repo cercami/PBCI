@@ -9,6 +9,7 @@ import functions.py
 """
 
 import os
+import seaborn as sns
 import numpy as np
 from sklearn.cross_decomposition import CCA
 from scipy.io import loadmat
@@ -17,7 +18,11 @@ import os
 from datetime import datetime
 import pandas as pd
 import mne
+import sys
 
+
+### Functions
+### Functions
 def loadData(fpath, fname):
     """load all files of the same data and safe them in one list
 
@@ -48,6 +53,7 @@ def loadData(fpath, fname):
             print("No files found here!")
     return csvfiles
 
+
 def preprocess(mat_input, vec_pick_el, i_ref_el, n_start, n_stop):
     """Extract and preprocess the data by applying referencing, baseline correction, channel selection, and cropping
     Parameters
@@ -69,8 +75,10 @@ def preprocess(mat_input, vec_pick_el, i_ref_el, n_start, n_stop):
         The preprocessed data.
     """
     ## Referencing and baseline correction
+    baseline = np.mean(np.mean(mat_input[:, 0:n_start], axis=0))  # get baseline (DC offset)
+    mat_input = mat_input - baseline  # apply baseline
+
     mat_output = mat_input - mat_input[i_ref_el, :]  # reference
-    baseline = np.mean(np.mean(mat_output[:, 0:n_start], axis=0))  # get baseline (DC offset)
     # mat_data = mat_data - np.mean(mat_data, axis=0) # common-average-referencing
     mat_output = mat_output[vec_pick_el, n_start:n_stop] - baseline  # channel selection
     return mat_output
@@ -97,7 +105,6 @@ def apply_cca(X, Y):
     rho = np.diag(np.corrcoef(x, y, rowvar=False)[:n_comp, n_comp:])
 
     return rho
-
 
 
 def apply_advanced_cca(X, Y, X_Train):
@@ -147,24 +154,6 @@ def apply_advanced_cca(X, Y, X_Train):
     return rho
 
 
-def gof(freqs, result):
-    """computes the goofness of fit
-    Parameters
-    ----------
-    freqs : array, shape (n_freqs, 1)
-        Frequencies / labels.
-    result : array, shape (n_freqs, n_trials)
-        The estimated frequencies
-
-    Returns
-    -------
-    gof : float
-        The goodness-of-fit
-    """
-    return 100 * (1 - np.sum(np.square(freqs.reshape(40, 1) - freqs[result.astype(int)])) / np.sum(
-        [np.square(freqs)] * result.shape[1]))
-
-
 def accuracy(freqs, result):
     """computes the accuracy
     Parameters
@@ -206,3 +195,159 @@ def weight(n):
     a = 1.25
     b = 0.25
     return np.power(n, -a) + b  # eq. 7
+
+
+def make_df(results, freqs, phase, n_freq, n_sub, n_blocks, time=None):
+    """create dataframe
+
+    Parameters
+    ----------
+    results : array, shape(n_freq, n_subjects * n_blocks)
+        results per trial
+    freqs : array, shape(n_freq,)
+        The stimulation frequencies
+    phase : array, shape(n_freq,)
+        The stimulation phases
+    n_freq : int
+        number of frequencies
+    n_sub : int
+        number of subjects
+    n_blocks : int
+        number of blocks
+    time : array, shape(n_freq, n_subjects * n_blocks)
+        time needed per trial in ms
+    Return
+    -------
+    df : DataFrame, shape(n_trials,['Estimation','Frequency','Phase','Subject','Block'])
+        The DataFrame
+    """
+
+    list_col_names = ['Estimation', 'Frequency', 'Phase', 'Subject', 'Block']
+    df = pd.DataFrame(columns=list_col_names)
+
+    df['Estimation'] = freqs[results.astype(int)].flatten('F')
+    df['Frequency'] = np.concatenate(n_sub * n_blocks * [freqs])
+    df['Phase'] = np.concatenate(n_sub * n_blocks * [phase])
+    if time is not None:
+        df['Time'] = (pd.to_timedelta(time.flatten('F'))).astype('timedelta64[ms]')
+
+    for s in range(n_sub):
+        df['Subject'][s * n_blocks * n_freq:s * n_blocks * n_freq + n_blocks * n_freq] = np.full(n_blocks * n_freq,
+                                                                                                 s + 1, dtype=int)
+        for b in range(n_blocks):
+            df['Block'][s * n_blocks * n_freq + b * n_freq:s * n_blocks * n_freq + b * n_freq + n_freq] = np.full(
+                n_freq, b + 1, dtype=int)
+
+    df['Subject'].astype(int)
+    df['Block'].astype(int)
+    df['Error'] = (df['Estimation'] - df['Frequency']).abs()
+    df['Compare'] = df['Estimation'] == df['Frequency']
+    return df
+
+
+def mk_df(results, threshold, time, max, freqs, n_freq, n_sub, n_blocks):
+    """create dataframe
+
+    Parameters
+    ----------
+    results : array, shape(n_freq, n_subjects * n_blocks)
+        classification results per trial
+    threshold : array, shape(n_freq, n_subjects * n_blocks)
+        results with applied thresholds. rejected trials are stored as -1
+    time : array, shape(n_freq, n_subjects * n_blocks)
+        time needed per trial in ms
+    max : array, shape(n_freq, n_subjects * n_blocks)
+        The maximum value per trial
+    freqs : array, shape(n_freq,)
+        The stimulation frequencies
+    n_freq : int
+        number of frequencies
+    n_sub : int
+        number of subjects
+    n_blocks : int
+        number of blocks
+    Return
+    -------
+    df : DataFrame, shape(n_trials,['Subject', 'Block', 'Frequency', 'Estimation', 'Threshold', 'Max', 'Compare', 'Time'])
+        The DataFrame
+    """
+
+    list_col_names = ['Subject', 'Block', 'Frequency', 'Estimation', 'Threshold', 'Max', 'Compare', 'Time']
+    df = pd.DataFrame(columns=list_col_names)
+
+    df['Estimation'] = freqs[results.astype(int)].flatten('F')
+    df['Threshold'] = threshold.flatten('F')
+    df['Max'] = max.flatten('F')
+    df['Frequency'] = np.concatenate(n_sub * n_blocks * [freqs])
+    df['Time'] = (pd.to_timedelta(time.flatten('F'))).astype('timedelta64[ms]')
+
+    for s in range(n_sub):
+        df['Subject'][s * n_blocks * n_freq:s * n_blocks * n_freq + n_blocks * n_freq] = np.full(n_blocks * n_freq,
+                                                                                                 s + 1, dtype=int)
+        for b in range(n_blocks):
+            df['Block'][s * n_blocks * n_freq + b * n_freq:s * n_blocks * n_freq + b * n_freq + n_freq] = np.full(
+                n_freq, b + 1, dtype=int)
+
+    df['Subject'].astype(int)
+    df['Block'].astype(int)
+    df['Compare'] = df['Estimation'] == df['Frequency']
+    return df
+
+
+def set_style(fig, ax=None):
+    sns.despine(ax=ax, top=True, right=True, left=False, bottom=False, offset={'left': 10, 'bottom': 5})
+
+    if ax:
+        ax.yaxis.label.set_size(10)
+        ax.xaxis.label.set_size(10)
+        ax.grid(axis='y', color='C7', linestyle='--', lw=.5)
+        ax.tick_params(which='major', direction='out', length=3, width=1, bottom=True, left=True)
+        ax.tick_params(which='minor', direction='out', length=2, width=0.5, bottom=True, left=True)
+        plt.setp(ax.spines.values(), linewidth=.8)
+    return fig, ax
+
+
+def set_size(fig, a, b):
+    fig.set_size_inches(a, b)
+    fig.set_tight_layout(True)
+    return fig
+
+
+def itr(df):
+    M = 40
+    P = df[0] / 100
+    if P == 100.0:
+        P = 0.99
+    T = 2 + 2
+    return (np.log2(M) + P * np.log2(P) + (1 - P) * np.log2((1 - P) / (M - 1))) * 60 / T
+
+
+def plot_trial(results):
+    """plot the passed matrix as heatmap/imshow
+
+    Parameters
+    ----------
+    results : array, shape(n_freq,n_block*n_subject)
+        data that contains the results of classification
+
+    Return
+    -------
+    fig, ax
+
+    """
+    n_freq = np.shape(results)[0]
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.imshow(results)
+    ax.set_ylabel('Trial')
+    ax.set_xlabel('Subjects')
+    ax.set_xticks(np.arange(0, 210, 6))
+    ax.set_xticklabels(np.arange(1, 36))
+    set_size(fig, 8, 2.5)
+    fig.tight_layout()
+    return fig, ax
+
+
+### Lambdas
+acc = lambda mat: np.sum(mat[mat > 0]) / (np.size(mat) - np.size(mat[mat == -1])) * 100
+standardize = lambda mat: (mat - np.mean(mat, axis=1)[:, None]) / np.std(mat, axis=1)[:, None]
