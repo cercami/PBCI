@@ -30,10 +30,10 @@
 set -e
 
 # Load modules 
-module load python3/3.6.2
-module load mne
-module load sklearn
-module load seaborn
+module load python3/3.8.4
+# module load mne
+# module load sklearn
+# module load seaborn
 
 # Load virtual Python environment
 source pbci/bin/activate
