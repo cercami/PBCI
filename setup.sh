@@ -4,10 +4,7 @@
 virtualenv venv
 source ./venv/bin/activate
 
-pip install -U pip
-pip install -U setuptools
-pip install sklearn
-pip install pandas
-pip install matplotlib
-pip install numpy
-pip install mne
+# load modules
+module load python/3.7.3
+
+pip/pip3 install --user mne
