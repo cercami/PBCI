@@ -235,7 +235,7 @@ vec_ind_el = df_location[df_location['Label'].isin(list_el)].index  # Vector wit
 ind_ref_el = df_location['Electrode'][df_location['Label'] == 'Cz'].index[0]  # Index of reference electrode 'Cz'
 
 fs = 250  # sampling frequency in hz
-N_sec = 1
+N_sec = 5
 N_pre = int(0.5 * fs)  # pre stim
 N_delay = int(0.140 * fs)  # SSVEP delay
 N_stim = int(N_sec * fs)  # stimulation
