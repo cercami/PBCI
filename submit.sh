@@ -38,4 +38,4 @@ source venv/bin/activate
 ##################################################################
 # Execute your own code by replacing the sanity check code below #
 ##################################################################
-python3 hw.py
+python3 cca.py
