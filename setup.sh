@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #Load preinstalled modules
-module load python3/3.6.2
+module load python/3.7.3
 
 # Create a virtual environment for Python3
 python3 -m venv pbci
