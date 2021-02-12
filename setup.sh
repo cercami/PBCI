@@ -7,7 +7,7 @@ module load python3/3.6.2
 python3 -m venv pbci
 
 # Activate virtual environment
-source ~/pbci/bin/activate
+source pbci/bin/activate
 
 # install mne
-pip install pbci
+pip install --user mne
