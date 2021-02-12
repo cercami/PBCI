@@ -30,10 +30,7 @@
 set -e
 
 # Load modules 
-module unload cuda
-module unload cudann
-module load cuda/9.0
-module load cudnn/v7.0.5-prod-cuda-9.0
+module load python/3.7.3
 
 # Load virtual Python environment
 source venv/bin/activate
@@ -42,8 +39,4 @@ source venv/bin/activate
 ##################################################################
 # Execute your own code by replacing the sanity check code below #
 ##################################################################
-# Print available GPU devices with Tensorflow
-python -c "from tensorflow.python.client import device_lib; print device_lib.list_local_devices();"
-# Verify installed Tensorflow and Keras versions
-python -c "import tensorflow as tf; print 'Tensorflow version', tf.__version__;"
-python -c "import keras; print 'Keras version', keras.__version__;"
+python -c "import mne; mne.sys_info()"

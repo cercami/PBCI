@@ -1,10 +1,13 @@
 #!/bin/sh
 
-# Setup virtual env
-virtualenv venv
-source ./venv/bin/activate
+#Load preinstalled modules
+module load python3/3.6.2
 
-# load modules
-module load python/3.7.3
+# Create a virtual environment for Python3
+python3 -m venv pbci
 
-pip/pip3 install --user mne
+# Activate virtual environment
+source ~/pbci/bin/activate
+
+# install mne
+pip install pbci
