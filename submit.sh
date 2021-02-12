@@ -30,10 +30,10 @@
 set -e
 
 # Load modules 
-module load python/3.7.3
+module load python3/3.6.2
 
 # Load virtual Python environment
-source venv/bin/activate
+source pbci/bin/activate
 
 ##################################################################
 # Execute your own code by replacing the sanity check code below #
