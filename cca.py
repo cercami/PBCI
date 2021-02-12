@@ -177,6 +177,9 @@ def accuracy(freqs, result):
     return 100 * n_correct / (np.size(result))
 
 
+acc = lambda mat: np.sum(mat[mat > 0]) / (np.size(mat) - np.size(mat[mat == -1])) * 100
+
+
 def weight(n):
     """computes the weight for fbcca coefficients
 
@@ -255,15 +258,20 @@ for k in range(0, Nf):
 
 ### Frequency detection using CCA
 list_result_cca = []  # list to store the subject wise results
-list_time_cca = []
-list_bool_result = []
-list_bool_thresh = []
+list_time_cca = []  # list to store the time used per trial
+list_bool_result = []   # list to store the classification as true/false
+list_bool_thresh = []   # list to store the classification with thresholds
+list_rho = []
+list_max = []
+
 num_iter = 0
-Ns = Ns
+Ns = 1
 for s in range(0, Ns):
     mat_ind_max = np.zeros([Nf, Nb])  # index of maximum cca
     mat_bool = np.zeros([Nf, Nb])
     mat_bool_thresh = np.zeros([Nf, Nb])
+    mat_rho = np.zeros([Nf, Nb])
+    mat_max = np.zeros([Nf, Nb])
     mat_time = np.zeros([Nf, Nb], dtype='object')  # matrix to store time needed
     t_start = datetime.now()
     for b in range(0, Nb):
@@ -284,12 +292,15 @@ for s in range(0, Ns):
             t_trial_end = datetime.now()
             mat_time[f, b] = t_trial_end - t_trial_start
             mat_ind_max[f, b] = np.argmax(vec_rho)  # get index of maximum -> frequency -> letter
-            mat_bool[f, b] = mat_ind_max[f, b].astype(int) == f
+            mat_bool[f, b] = mat_ind_max[f, b].astype(int) == f     # compare if classification is true
             mat_bool_thresh[f, b] = mat_ind_max[f, b].astype(int) == f
+            mat_max[f, b] = np.max(np.abs(mat_filt))
+            mat_rho[f, b] = np.max(vec_rho)
 
             # apply threshold
             thresh = 35
-            if (np.max(np.abs(mat_filt)) > thresh):
+            if np.max(np.abs(mat_filt)) > thresh:
+                # minus 1 if it is going to be removed
                 mat_bool_thresh[f, b] = -1
 
             num_iter = num_iter + 1
@@ -299,23 +310,23 @@ for s in range(0, Ns):
     list_result_cca.append(mat_ind_max)  # store results per subject
     list_bool_result.append(mat_bool)
     list_bool_thresh.append(mat_bool_thresh)
+    list_rho.append(mat_rho)
+    list_max.append(mat_max)
 
     t_end = datetime.now()
     print("CCA: Elapsed time for subject: " + str(s + 1) + ": " + str((t_end - t_start)), flush=True)
+
 
 mat_result_cca = np.concatenate(list_result_cca, axis=1)
 mat_time_cca = np.concatenate(list_time_cca, axis=1)
 mat_bool_cca = np.concatenate(list_bool_result, axis=1)
 mat_bool_cca_thresh = np.concatenate(list_bool_thresh, axis=1)
 
-acc = lambda mat: np.sum(mat[mat > 0]) / (np.size(mat) - np.size(mat[mat == -1])) * 100
 
 ### analysis
-gof_cca = gof(vec_freq, mat_result_cca)
 accuracy_cca = accuracy(vec_freq, mat_result_cca)
-accuracy_cca_drop = acc(mat_bool)
+accuracy_cca_drop = acc(mat_bool_thresh)
 
-print("CCA: gof: " + str(gof_cca))
 print("CCA: accuracy: " + str(accuracy_cca))
 print("CCA: accuracy dropped: " + str(accuracy_cca_drop))
 
