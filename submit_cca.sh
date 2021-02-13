@@ -22,8 +22,8 @@
 #BSUB -N
 ### -- Specify the output and error file. %J is the job-id --
 ### -- -o and -e mean append, -oo and -eo mean overwrite --
-#BSUB -o gpu-%J.out
-#BSUB -e gpu_%J.err
+#BSUB -o log/cca_gpu-%J.out
+#BSUB -e log/cca_gpu_%J.err
 # -- end of LSF options --
 
 # Exits if any errors occur at any point (non-zero exit code)
