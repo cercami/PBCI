@@ -5,7 +5,7 @@ module load python3/3.8.4
 
 # Create a virtual environment for Python3
 python3 -m venv pbci
-
+python3 -m 
 # Activate virtual environment
 source pbci/bin/activate
 
