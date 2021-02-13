@@ -3,7 +3,7 @@
 ### –- specify queue: gpuv100, gputitanxpascal, gpuk40, gpum2050 --
 #BSUB -q gpuv100
 ### -- set the job Name --
-#BSUB -J pbci_eval
+#BSUB -J ext_cca
 ### -- ask for number of cores (default: 1) --
 #BSUB -n 1
 ### -- Select the resources: 1 gpu in exclusive process mode --
@@ -41,4 +41,4 @@ source pbci/bin/activate
 ##################################################################
 # Execute your own code by replacing the sanity check code below #
 ##################################################################
-python3 cca.py
+python3 advanced_cca.py
