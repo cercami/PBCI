@@ -1,4 +1,0 @@
-import mne
-
-print("Hello")
-
