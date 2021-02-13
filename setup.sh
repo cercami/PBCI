@@ -1,13 +1,17 @@
 #!/bin/sh
 
-# Setup virtual env
-virtualenv venv
-source ./venv/bin/activate
+#Load preinstalled modules
+module load python3/3.8.4
 
-pip install -U pip
-pip install -U setuptools
-pip install sklearn
-pip install pandas
-pip install matplotlib
-pip install numpy
-pip install mne
+# Create a virtual environment for Python3
+python3 -m venv pbci
+python3 -m 
+# Activate virtual environment
+source pbci/bin/activate
+
+# install mne
+python3 -m pip install mne
+python3 -m pip install scikit-learn
+python3 -m pip install pandas
+python3 -m pip install seaborn
+
