@@ -32,7 +32,7 @@ vec_ind_el = df_location[df_location['Label'].isin(list_el)].index  # Vector wit
 ind_ref_el = df_location['Electrode'][df_location['Label'] == 'Cz'].index[0]  # Index of reference electrode 'Cz'
 
 fs = 250  # sampling frequency in hz
-N_sec = 5
+# N_sec = 5
 N_pre = int(0.5 * fs)  # pre stim
 N_delay = int(0.140 * fs)  # SSVEP delay
 N_stim = int(N_sec * fs)  # stimulation
@@ -44,7 +44,7 @@ vec_t = np.arange(-0.5, 5.5, 1 / 250)  # time vector
 Nh = 5  # Number of harmonics
 Nf = len(vec_freq)  # Number of frequencies
 Nb = 6  # Number of Blocks
-Ns = len(list_subject_data)
+# Ns = len(list_subject_data)
 mat_Y = np.zeros([Nf, Nh * 2, N_stim])  # [Frequency, Harmonics * 2, Samples]
 
 for k in range(0, Nf):
@@ -93,6 +93,7 @@ for s in range(0, Ns):
 
             # apply threshold
             mat_stand = standardize(mat_filt)
+            mat_rho[f, b] = np.max(vec_rho)
             mat_max[f, b] = np.max(np.abs(mat_stand))
             thresh = 6
             if np.max(np.abs(mat_stand)) > thresh:
@@ -116,6 +117,7 @@ mat_time = np.concatenate(list_time, axis=1)
 mat_b = np.concatenate(list_bool_result, axis=1)
 mat_b_thresh = np.concatenate(list_bool_thresh, axis=1)
 mat_max = np.concatenate(list_max, axis=1)
+mat_rho = np.concatenate(list_rho, axis=1)
 
 ### analysis
 accuracy_all = accuracy(vec_freq, mat_result)
@@ -124,14 +126,9 @@ accuracy_drop = acc(mat_b_thresh)
 print("CCA: accuracy: " + str(accuracy_all))
 print("CCA: accuracy dropped: " + str(accuracy_drop))
 
-plt.figure()
-plt.imshow(mat_result)
-
-plt.figure()
-plt.imshow(mat_b)
-
-np.save(os.path.join(dir_results, 'cca_mat_result'), mat_result)
-np.save(os.path.join(dir_results, 'cca_mat_time'), mat_time)
-np.save(os.path.join(dir_results, 'cca_mat_b'), mat_b)
-np.save(os.path.join(dir_results, 'cca_mat_b_thresh'), mat_b_thresh)
-np.save(os.path.join(dir_results, 'cca_mat_max'), mat_max)
+np.save(os.path.join(dir_results, 'cca_mat_result_' + str(N_sec) + '_' + str(Ns)), mat_result)
+np.save(os.path.join(dir_results, 'cca_mat_time_' + str(N_sec) + '_' + str(Ns)), mat_time)
+np.save(os.path.join(dir_results, 'cca_mat_b_' + str(N_sec) + '_' + str(Ns)), mat_b)
+np.save(os.path.join(dir_results, 'cca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns)), mat_b_thresh)
+np.save(os.path.join(dir_results, 'cca_mat_max_' + str(N_sec) + '_' + str(Ns)), mat_max)
+np.save(os.path.join(dir_results, 'cca_mat_rho_' + str(N_sec) + '_' + str(Ns)), mat_rho)

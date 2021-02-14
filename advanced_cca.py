@@ -87,12 +87,12 @@ for s in range(0, Ns):
 
     # average over subjects
     for b in range(0, Nb):
-        t_trial_start = datetime.now()
 
         # average over subjects
         mat_blocks_dropped = np.delete(mat_filtered[s], b, axis=0)
         mat_X_train = np.mean(mat_blocks_dropped, axis=0)
         for f in range(0, Nf):
+            t_trial_start = datetime.now()
 
             # Apply CCA
             vec_rho = np.zeros(Nf)
@@ -101,6 +101,7 @@ for s in range(0, Ns):
 
             t_trial_end = datetime.now()
             mat_time[f, b] = t_trial_end - t_trial_start
+            mat_rho[f, b] = np.max(vec_rho)
             mat_ind_max[f, b] = np.argmax(vec_rho)  # get index of maximum -> frequency -> letter
             num_iter = num_iter + 1
 
@@ -127,6 +128,7 @@ mat_time = np.concatenate(list_time, axis=1)
 mat_b = np.concatenate(list_bool_result, axis=1)
 mat_b_thresh = np.concatenate(list_bool_thresh, axis=1)
 mat_max = np.concatenate(list_max, axis=1)
+mat_rho = np.concatenate(list_rho, axis=1)
 
 ### Analysis
 accuracy_all = accuracy(vec_freq, mat_result)
@@ -135,14 +137,9 @@ accuracy_drop = acc(mat_b_thresh)
 print("Extended CCA: accuracy: " + str(accuracy_all))
 print("Extended CCA: accuracy dropped: " + str(accuracy_drop))
 
-plt.figure()
-plt.imshow(mat_result)
-
-plt.figure()
-plt.imshow(mat_b)
-
-np.save(os.path.join(dir_results, 'ext_cca_mat_result'), mat_result)
-np.save(os.path.join(dir_results, 'ext_cca_mat_time'), mat_time)
-np.save(os.path.join(dir_results, 'ext_cca_mat_b'), mat_b)
-np.save(os.path.join(dir_results, 'ext_cca_mat_b_thresh'), mat_b_thresh)
-np.save(os.path.join(dir_results, 'ext_cca_mat_max'), mat_max)
+np.save(os.path.join(dir_results, 'ext_cca_mat_result_' + str(N_sec) + '_' + str(Ns)), mat_result)
+np.save(os.path.join(dir_results, 'ext_cca_mat_time_' + str(N_sec) + '_' + str(Ns)), mat_time)
+np.save(os.path.join(dir_results, 'ext_cca_mat_b_' + str(N_sec) + '_' + str(Ns)), mat_b)
+np.save(os.path.join(dir_results, 'ext_cca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns)), mat_b_thresh)
+np.save(os.path.join(dir_results, 'ext_cca_mat_max_' + str(N_sec) + '_' + str(Ns)), mat_max)
+np.save(os.path.join(dir_results, 'ext_cca_mat_rho_' + str(N_sec) + '_' + str(Ns)), mat_rho)

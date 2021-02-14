@@ -14,4 +14,4 @@ python3 -m pip install mne
 python3 -m pip install scikit-learn
 python3 -m pip install pandas
 python3 -m pip install seaborn
-
+python3 -m pip install argparse

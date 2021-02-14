@@ -117,24 +117,26 @@ for s in range(0, Ns):
                 vec_rho_k = np.zeros(N)
                 for n in range(N):
                     vec_rho_k[n] = apply_advanced_cca(mat_filter[n], mat_Y[k, :, :], mat_filter_train[n])
-                vec_rho_k = np.power(vec_rho_k, np.arange(1, N + 1) + 2)
+                vec_rho_k = np.power(vec_rho_k, 2)
                 vec_rho[k] = np.dot(vec_weights, vec_rho_k)
 
             t_trial_end = datetime.now()
             mat_time[f, b] = t_trial_end - t_trial_start
 
             num_iter = num_iter + 1
-            print("Extended FBCCA: Iteration " + str(num_iter) + " of " + str(Nf * Nb * Ns), flush=True)
-
+            mat_rho[f, b] = np.max(vec_rho)
             mat_ind_max[f, b] = np.argmax(vec_rho)  # get index of maximum -> frequency -> letter
 
             # apply threshold
-            mat_stand = standardize(mat_data)
-            mat_max[f, b] = np.max(np.abs(mat_stand))
-            thresh = 6
-            if np.max(np.abs(mat_stand)) > thresh:
-                # minus 1 if it is going to be removed
-                mat_bool_thresh[f, b] = -1
+            for data in mat_filter:
+                mat_stand = standardize(data)
+                if np.max(np.abs(mat_stand)) > mat_max[f, b]:
+                    mat_max[f, b] = np.max(np.abs(mat_stand))
+
+                thresh = 6
+                if np.max(np.abs(mat_stand)) > thresh:
+                    # minus 1 if it is going to be removed
+                    mat_bool_thresh[f, b] = -1
 
     list_result.append(mat_ind_max)  # store results per subject
     list_time.append(mat_time)  # store results per subject
@@ -144,12 +146,14 @@ for s in range(0, Ns):
     list_max.append(mat_max)
 
     t_end = datetime.now()
+    print("Extended FBCCA: Elapsed time for subject: " + str(s + 1) + ": " + str((t_end - t_start)), flush=True)
 
 mat_result = np.concatenate(list_result, axis=1)
 mat_time = np.concatenate(list_time, axis=1)
 mat_b = np.concatenate(list_bool_result, axis=1)
 mat_b_thresh = np.concatenate(list_bool_thresh, axis=1)
 mat_max = np.concatenate(list_max, axis=1)
+mat_rho = np.concatenate(list_rho, axis=1)
 
 ### Analysis
 accuracy_all = accuracy(vec_freq, mat_result)
@@ -158,14 +162,9 @@ accuracy_drop = acc(mat_bool_thresh)
 print("Extended CCA: accuracy: " + str(accuracy_all))
 print("Extended CCA: accuracy dropped: " + str(accuracy_drop))
 
-plt.figure()
-plt.imshow(mat_result)
-
-plt.figure()
-plt.imshow(mat_b)
-
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_result'), mat_result)
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_time'), mat_time)
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_b'), mat_b)
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_b_thresh'), mat_b_thresh)
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_max'), mat_max)
+np.save(os.path.join(dir_results, 'ext_fcca_mat_result_' + str(N_sec) + '_' + str(Ns)), mat_result)
+np.save(os.path.join(dir_results, 'ext_fcca_mat_time_' + str(N_sec) + '_' + str(Ns)), mat_time)
+np.save(os.path.join(dir_results, 'ext_fcca_mat_b_' + str(N_sec) + '_' + str(Ns)), mat_b)
+np.save(os.path.join(dir_results, 'ext_fcca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns)), mat_b_thresh)
+np.save(os.path.join(dir_results, 'ext_fcca_mat_max_' + str(N_sec) + '_' + str(Ns)), mat_max)
+np.save(os.path.join(dir_results, 'extfbcca_mat_rho_' + str(N_sec) + '_' + str(Ns)), mat_rho)

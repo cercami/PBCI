@@ -9,9 +9,9 @@
 ### -- Select the resources: 1 gpu in exclusive process mode --
 #BSUB -gpu "num=1:mode=exclusive_process"
 ### -- set walltime limit: hh:mm --  maximum 24 hours for GPU-queues right now
-#BSUB -W 20:00
-### -- request 5GB of memory
-#BSUB -R "rusage[mem=20GB]"
+#BSUB -W 8:00
+### -- request 10GB of memory
+#BSUB -R "rusage[mem=10GB]"
 ### -- set the email address --
 # please uncomment the following line and put in your e-mail address,
 # if you want to receive e-mail notifications on a non-default address
@@ -41,4 +41,4 @@ source pbci/bin/activate
 ##################################################################
 # Execute your own code by replacing the sanity check code below #
 ##################################################################
-python3 advanced_fbcca.py
+python3 advanced_fbcca.py --length 5 --subjects 35
