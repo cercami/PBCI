@@ -124,7 +124,7 @@ for s in range(0, Ns):
             mat_time[f, b] = t_trial_end - t_trial_start
 
             num_iter = num_iter + 1
-
+            mat_rho[f, b] = np.max(vec_rho)
             mat_ind_max[f, b] = np.argmax(vec_rho)  # get index of maximum -> frequency -> letter
 
             # apply threshold
@@ -153,6 +153,7 @@ mat_time = np.concatenate(list_time, axis=1)
 mat_b = np.concatenate(list_bool_result, axis=1)
 mat_b_thresh = np.concatenate(list_bool_thresh, axis=1)
 mat_max = np.concatenate(list_max, axis=1)
+mat_rho = np.concatenate(list_rho, axis=1)
 
 ### Analysis
 accuracy_all = accuracy(vec_freq, mat_result)
@@ -166,3 +167,4 @@ np.save(os.path.join(dir_results, 'ext_fcca_mat_time_' + str(N_sec) + '_' + str(
 np.save(os.path.join(dir_results, 'ext_fcca_mat_b_' + str(N_sec) + '_' + str(Ns)), mat_b)
 np.save(os.path.join(dir_results, 'ext_fcca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns)), mat_b_thresh)
 np.save(os.path.join(dir_results, 'ext_fcca_mat_max_' + str(N_sec) + '_' + str(Ns)), mat_max)
+np.save(os.path.join(dir_results, 'extfbcca_mat_rho_' + str(N_sec) + '_' + str(Ns)), mat_rho)

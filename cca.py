@@ -93,6 +93,7 @@ for s in range(0, Ns):
 
             # apply threshold
             mat_stand = standardize(mat_filt)
+            mat_rho[f, b] = np.max(vec_rho)
             mat_max[f, b] = np.max(np.abs(mat_stand))
             thresh = 6
             if np.max(np.abs(mat_stand)) > thresh:
@@ -116,6 +117,7 @@ mat_time = np.concatenate(list_time, axis=1)
 mat_b = np.concatenate(list_bool_result, axis=1)
 mat_b_thresh = np.concatenate(list_bool_thresh, axis=1)
 mat_max = np.concatenate(list_max, axis=1)
+mat_rho = np.concatenate(list_rho, axis=1)
 
 ### analysis
 accuracy_all = accuracy(vec_freq, mat_result)
@@ -129,3 +131,4 @@ np.save(os.path.join(dir_results, 'cca_mat_time_' + str(N_sec) + '_' + str(Ns)),
 np.save(os.path.join(dir_results, 'cca_mat_b_' + str(N_sec) + '_' + str(Ns)), mat_b)
 np.save(os.path.join(dir_results, 'cca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns)), mat_b_thresh)
 np.save(os.path.join(dir_results, 'cca_mat_max_' + str(N_sec) + '_' + str(Ns)), mat_max)
+np.save(os.path.join(dir_results, 'cca_mat_rho_' + str(N_sec) + '_' + str(Ns)), mat_rho)
