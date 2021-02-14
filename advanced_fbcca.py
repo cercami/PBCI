@@ -124,17 +124,19 @@ for s in range(0, Ns):
             mat_time[f, b] = t_trial_end - t_trial_start
 
             num_iter = num_iter + 1
-            print("Extended FBCCA: Iteration " + str(num_iter) + " of " + str(Nf * Nb * Ns), flush=True)
 
             mat_ind_max[f, b] = np.argmax(vec_rho)  # get index of maximum -> frequency -> letter
 
             # apply threshold
-            mat_stand = standardize(mat_data)
-            mat_max[f, b] = np.max(np.abs(mat_stand))
-            thresh = 6
-            if np.max(np.abs(mat_stand)) > thresh:
-                # minus 1 if it is going to be removed
-                mat_bool_thresh[f, b] = -1
+            for data in mat_filter:
+                mat_stand = standardize(data)
+                if np.max(np.abs(mat_stand)) > mat_max[f, b]:
+                    mat_max[f, b] = np.max(np.abs(mat_stand))
+
+                thresh = 6
+                if np.max(np.abs(mat_stand)) > thresh:
+                    # minus 1 if it is going to be removed
+                    mat_bool_thresh[f, b] = -1
 
     list_result.append(mat_ind_max)  # store results per subject
     list_time.append(mat_time)  # store results per subject
@@ -144,6 +146,7 @@ for s in range(0, Ns):
     list_max.append(mat_max)
 
     t_end = datetime.now()
+    print("Extended FBCCA: Elapsed time for subject: " + str(s + 1) + ": " + str((t_end - t_start)), flush=True)
 
 mat_result = np.concatenate(list_result, axis=1)
 mat_time = np.concatenate(list_time, axis=1)

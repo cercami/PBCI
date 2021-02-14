@@ -112,13 +112,15 @@ for s in range(0, Ns):
             mat_max[f, b] = np.max(np.abs(mat_data))
             mat_rho[f, b] = np.max(vec_rho)
 
-            # apply threshold
-            thresh = 45
-            if np.max(np.abs(mat_data)) > thresh:
-                # minus 1 if it is going to be removed
-                mat_bool_thresh[f, b] = -1
-
-            num_iter = num_iter + 1
+            # Apply Threshold
+            for data in mat_filter:
+                mat_stand = standardize(data)
+                if np.max(np.abs(mat_stand)) > mat_max[f, b]:
+                    mat_max[f, b] = np.max(np.abs(mat_stand))
+                thresh = 6
+                if np.max(np.abs(mat_stand)) > thresh:
+                    # minus 1 if it is going to be removed
+                    mat_bool_thresh[f, b] = -1
 
     list_result.append(mat_ind_max)  # store results per subject
     list_time.append(mat_time)
