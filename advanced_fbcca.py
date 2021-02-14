@@ -117,7 +117,7 @@ for s in range(0, Ns):
                 vec_rho_k = np.zeros(N)
                 for n in range(N):
                     vec_rho_k[n] = apply_advanced_cca(mat_filter[n], mat_Y[k, :, :], mat_filter_train[n])
-                vec_rho_k = np.power(vec_rho_k, np.arange(1, N + 1) + 2)
+                vec_rho_k = np.power(vec_rho_k, 2)
                 vec_rho[k] = np.dot(vec_weights, vec_rho_k)
 
             t_trial_end = datetime.now()
