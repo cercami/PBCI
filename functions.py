@@ -120,7 +120,7 @@ def apply_cca(X, Y):
     return rho
 
 
-def apply_advanced_cca(X, Y, X_Train):
+def apply_ext_cca(X, Y, X_Train):
     """computes the maximum canonical correltion via cca
     Parameters
     ----------
@@ -149,7 +149,7 @@ def apply_advanced_cca(X, Y, X_Train):
     w_xxt = cca2.x_weights_
     cca3.fit(X.transpose(), Y.transpose())
     w_xy = cca3.x_weights_
-    cca4.fit(X.transpose(), Y.transpose())
+    cca4.fit(X_Train.transpose(), Y.transpose())
     w_xty = cca4.x_weights_
     rho_2 = np.diag(
         np.corrcoef(np.matmul(X.transpose(), w_xxt), np.matmul(X_Train.transpose(), w_xxt), rowvar=False)[:n_comp,
@@ -161,8 +161,61 @@ def apply_advanced_cca(X, Y, X_Train):
         np.corrcoef(np.matmul(X.transpose(), w_xty), np.matmul(X_Train.transpose(), w_xty), rowvar=False)[:n_comp,
         n_comp:])
 
+    # eq 8, Chen 2015,PNAS
     rho = np.sign(rho_1) * rho_1 ** 2 + np.sign(rho_2) * rho_2 ** 2 + np.sign(rho_3) * rho_3 ** 2 + np.sign(
         rho_4) * rho_4 ** 2
+
+    return rho
+
+
+def apply_ext_fbcca(X, Y, X_Train):
+    """computes the maximum canonical correltion via cca
+    Parameters
+    ----------
+    X : array, shape (n_channels, n_times)
+        Input data.
+    X_Train : array, shape (n_channels, b_times)
+        Second Reference data
+    Y : array, shape (n_signals, n_times)
+        Reference signal to find correlation with
+
+    Returns
+    -------
+    rho : int
+        The maximum canonical correlation coeficent
+    """
+    n_comp = 1
+    cca1 = CCA(n_components=n_comp)
+    cca2 = CCA(n_components=n_comp)
+    cca3 = CCA(n_components=n_comp)
+    cca4 = CCA(n_components=n_comp)
+    cca5 = CCA(n_components=n_comp)
+
+    cca1.fit(X.transpose(), Y.transpose())  #XY
+    x, y = cca1.transform(X.transpose(), Y.transpose())
+    rho_1 = np.diag(np.corrcoef(x, y, rowvar=False)[:n_comp, n_comp:])
+    cca2.fit(X.transpose(), X_Train.transpose())    #XX^
+    w_xxt_x = cca2.x_weights_
+    w_xxt_y = cca2.y_weights_
+    cca3.fit(X.transpose(), Y.transpose())  #XY
+    w_xy = cca3.x_weights_
+    cca4.fit(X_Train.transpose(), Y.transpose())    #X^Y
+    w_xty = cca4.x_weights_
+    rho_2 = np.diag(
+        np.corrcoef(np.matmul(X.transpose(), w_xxt_x), np.matmul(X_Train.transpose(), w_xxt_x), rowvar=False)[:n_comp,
+        n_comp:])
+    rho_3 = np.diag(
+        np.corrcoef(np.matmul(X.transpose(), w_xy), np.matmul(X_Train.transpose(), w_xy), rowvar=False)[:n_comp,
+        n_comp:])
+    rho_4 = np.diag(
+        np.corrcoef(np.matmul(X.transpose(), w_xty), np.matmul(X_Train.transpose(), w_xty), rowvar=False)[:n_comp,
+        n_comp:])
+    rho_5 = np.diag(
+        np.corrcoef(np.matmul(X_Train.transpose(), w_xxt_x), np.matmul(X_Train.transpose(), w_xxt_y), rowvar=False)[:n_comp,
+        n_comp:])
+
+    rho = np.sign(rho_1) * rho_1 ** 2 + np.sign(rho_2) * rho_2 ** 2 + np.sign(rho_3) * rho_3 ** 2 + np.sign(
+        rho_4) * rho_4 ** 2 + np.sign(rho_5) * rho_5 ** 2
 
     return rho
 
@@ -258,7 +311,7 @@ def make_df(results, freqs, phase, n_freq, n_sub, n_blocks, time=None):
     return df
 
 
-def mk_df(results, threshold, time, max, freqs, n_freq, n_sub, n_blocks):
+def mk_df(results, threshold, time, rho, max, freqs, n_freq, n_sub, n_blocks):
     """create dataframe
 
     Parameters
@@ -271,6 +324,8 @@ def mk_df(results, threshold, time, max, freqs, n_freq, n_sub, n_blocks):
         time needed per trial in ms
     max : array, shape(n_freq, n_subjects * n_blocks)
         The maximum value per trial
+    max : array, shape(n_freq, n_subjects * n_blocks)
+        The maximum rho per trial
     freqs : array, shape(n_freq,)
         The stimulation frequencies
     n_freq : int
@@ -281,16 +336,17 @@ def mk_df(results, threshold, time, max, freqs, n_freq, n_sub, n_blocks):
         number of blocks
     Return
     -------
-    df : DataFrame, shape(n_trials,['Subject', 'Block', 'Frequency', 'Estimation', 'Threshold', 'Max', 'Compare', 'Time'])
+    df : DataFrame, shape(n_trials,['Subject', 'Block', 'Frequency', 'Estimation', 'Threshold', 'Max', 'Rho', 'Compare', 'Time'])
         The DataFrame
     """
 
-    list_col_names = ['Subject', 'Block', 'Frequency', 'Estimation', 'Threshold', 'Max', 'Compare', 'Time']
+    list_col_names = ['Subject', 'Block', 'Frequency', 'Estimation', 'Threshold', 'Max','Rho', 'Compare', 'Time']
     df = pd.DataFrame(columns=list_col_names)
 
     df['Estimation'] = freqs[results.astype(int)].flatten('F')
     df['Threshold'] = threshold.flatten('F')
     df['Max'] = max.flatten('F')
+    df['Rho'] = rho.flatten('F')
     df['Frequency'] = np.concatenate(n_sub * n_blocks * [freqs])
     df['Time'] = (pd.to_timedelta(time.flatten('F'))).astype('timedelta64[ms]')
 
@@ -327,12 +383,12 @@ def set_size(fig, a, b):
 
 
 def itr(df):
-    M = 40
-    P = df[0] / 100
-    if P == 100.0:
-        P = 0.99
-    T = 2 + 2
-    return (np.log2(M) + P * np.log2(P) + (1 - P) * np.log2((1 - P) / (M - 1))) * 60 / T
+    m = 40
+    p = df/100
+    if p == 100.0:
+        p = 0.99
+    t = 5 + 0.5
+    return (np.log2(m) + p * np.log2(p) + (1 - p) * np.log2((1 - p) / (m - 1))) * 60 / t
 
 
 def plot_trial(results):
