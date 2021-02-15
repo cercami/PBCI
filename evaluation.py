@@ -50,23 +50,23 @@ Nb = 6
 Nf = 40
 fs = 250  # sampling frequency in hz
 
-df_b_cca = mk_df(cca_mat_result, cca_mat_b_thresh, cca_mat_time, cca_mat_max, cca_mat_rho, vec_freq, Nf, Ns, Nb)
-df_b_fbcca = mk_df(fbcca_mat_result, fbcca_mat_b_thresh, fbcca_mat_time, fbcca_mat_max, fbcca_mat_rho, vec_freq, Nf, Ns, Nb)
-df_b_ext_cca = mk_df(ext_cca_mat_result, ext_cca_mat_b_thresh, ext_cca_mat_time, ext_cca_mat_max, ext_cca_mat_rho, vec_freq, Nf, Ns, Nb)
-df_b_ext_fbcca = mk_df(ext_fbcca_mat_result, ext_fbcca_mat_b_thresh, ext_fbcca_mat_time, ext_fbcca_mat_max, ext_fbcca_mat_rho, vec_freq, Nf, Ns, Nb)
+df_cca = mk_df(cca_mat_result, cca_mat_b_thresh, cca_mat_time, cca_mat_max, cca_mat_rho, vec_freq, Nf, Ns, Nb)
+df_fbcca = mk_df(fbcca_mat_result, fbcca_mat_b_thresh, fbcca_mat_time, fbcca_mat_max, fbcca_mat_rho, vec_freq, Nf, Ns, Nb)
+df_ext_cca = mk_df(ext_cca_mat_result, ext_cca_mat_b_thresh, ext_cca_mat_time, ext_cca_mat_max, ext_cca_mat_rho, vec_freq, Nf, Ns, Nb)
+df_ext_fbcca = mk_df(ext_fbcca_mat_result, ext_fbcca_mat_b_thresh, ext_fbcca_mat_time, ext_fbcca_mat_max, ext_fbcca_mat_rho, vec_freq, Nf, Ns, Nb)
 
 # convert to subject wise representation
 df_subject = pd.DataFrame()
 
-df_subject['Accuracy CCA'] = df_b_cca.groupby(['Subject']).sum()['Compare'] / (Nb * Nf) * 100
-df_subject['Accuracy FBCCA'] = df_b_fbcca.groupby(['Subject']).sum()['Compare'] / (Nb * Nf) * 100
-df_subject['Accuracy ext CCA'] = df_b_ext_cca.groupby(['Subject']).sum()['Compare'] / (Nb * Nf) * 100
-df_subject['Accuracy ext FBCCA'] = df_b_ext_fbcca.groupby(['Subject']).sum()['Compare'] / (Nb * Nf) * 100
+df_subject['Accuracy CCA'] = df_cca.groupby(['Subject']).sum()['Compare'] / (Nb * Nf) * 100
+df_subject['Accuracy FBCCA'] = df_fbcca.groupby(['Subject']).sum()['Compare'] / (Nb * Nf) * 100
+df_subject['Accuracy ext CCA'] = df_ext_cca.groupby(['Subject']).sum()['Compare'] / (Nb * Nf) * 100
+df_subject['Accuracy ext FBCCA'] = df_ext_fbcca.groupby(['Subject']).sum()['Compare'] / (Nb * Nf) * 100
 
-df_subject['Time CCA'] = df_b_cca.groupby(['Subject']).mean()['Time'] / 1000
-df_subject['Time FBCCA'] = df_b_fbcca.groupby(['Subject']).mean()['Time'] / 1000
-df_subject['Time ext CCA'] = df_b_ext_cca.groupby(['Subject']).mean()['Time'] / 1000
-df_subject['Time ext FBCCA'] = df_b_ext_fbcca.groupby(['Subject']).mean()['Time'] / 1000
+df_subject['Time CCA'] = df_cca.groupby(['Subject']).mean()['Time'] / 1000
+df_subject['Time FBCCA'] = df_fbcca.groupby(['Subject']).mean()['Time'] / 1000
+df_subject['Time ext CCA'] = df_ext_cca.groupby(['Subject']).mean()['Time'] / 1000
+df_subject['Time ext FBCCA'] = df_ext_fbcca.groupby(['Subject']).mean()['Time'] / 1000
 
 df_subject['ITR CCA'] = df_subject['Accuracy CCA'].apply(itr)
 df_subject['ITR FBCCA'] = df_subject['Accuracy FBCCA'].apply(itr)
