@@ -51,7 +51,7 @@ mat_Y = np.zeros([Nf, Nh * 2, N_stim])  # [Frequency, Harmonics * 2, Samples]
 for k in range(0, Nf):
     for i in range(1, Nh + 1):
         mat_Y[k, i - 1, :] = np.sin(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
-        mat_Y[k, i, :] = np.cos(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
+        mat_Y[k, i-1+Nh, :] = np.cos(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
 
 Ns = 35
 Nb = 6
@@ -91,6 +91,7 @@ for s in range(0, Ns):
         # average over subjects
         mat_blocks_dropped = np.delete(mat_filtered[s], b, axis=0)
         mat_X_train = np.mean(mat_blocks_dropped, axis=0)
+
         for f in range(0, Nf):
             t_trial_start = datetime.now()
 

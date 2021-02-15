@@ -51,7 +51,7 @@ mat_Y = np.zeros([Nf, Nh * 2, N_stim])  # [Frequency, Harmonics * 2, Samples]
 for k in range(0, Nf):
     for i in range(1, Nh + 1):
         mat_Y[k, i - 1, :] = np.sin(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
-        mat_Y[k, i, :] = np.cos(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
+        mat_Y[k, i-1+Nh, :] = np.cos(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
 
 ### Frequency detection using advanced FBCCA
 list_result = []  # list to store the subject wise results
@@ -74,7 +74,6 @@ for s in range(0, Ns):
         for f in range(0, Nf):
             # Referencing and baseline correction
             mat_data = preprocess(list_subject_data[s][:, :, f, b], vec_ind_el, ind_ref_el, N_start, N_stop)
-            # Filter data
             mat_processed[s, b, f, :, :] = mat_data
 
 for s in range(0, Ns):
@@ -96,12 +95,13 @@ for s in range(0, Ns):
             t_trial_start = datetime.now()
 
             # Referencing and baseline correction
-            mat_data = preprocess(list_subject_data[s][:, :, f, b], vec_ind_el, ind_ref_el, N_start, N_stop)
+            mat_data = mat_processed[s, b, f, :, :]
             mat_data_train = mat_x_train[f, :, :]
             # Create Filter Bank
             mat_filter = np.zeros([N, mat_data.shape[0], mat_data.shape[1]])
             mat_filter_train = np.zeros([N, mat_data_train.shape[0], mat_data_train.shape[1]])
 
+            # create N sub-bands
             for n in range(0, N):
                 mat_filter[n] = mne.filter.filter_data(mat_data, fs, l_freq=f_low + n * bw, h_freq=f_high, method='fir',
                                                        l_trans_bandwidth=2, h_trans_bandwidth=2,
@@ -112,6 +112,7 @@ for s in range(0, Ns):
                                                              phase='zero-double', verbose=False)
 
             vec_rho = np.zeros(Nf)
+
             # Apply advanced FBCCA
             for k in range(0, Nf):
                 vec_rho_k = np.zeros(N)

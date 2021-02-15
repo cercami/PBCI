@@ -161,6 +161,7 @@ def apply_ext_cca(X, Y, X_Train):
         np.corrcoef(np.matmul(X.transpose(), w_xty), np.matmul(X_Train.transpose(), w_xty), rowvar=False)[:n_comp,
         n_comp:])
 
+    # eq 8, Chen 2015,PNAS
     rho = np.sign(rho_1) * rho_1 ** 2 + np.sign(rho_2) * rho_2 ** 2 + np.sign(rho_3) * rho_3 ** 2 + np.sign(
         rho_4) * rho_4 ** 2
 
