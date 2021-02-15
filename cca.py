@@ -44,7 +44,6 @@ vec_t = np.arange(-0.5, 5.5, 1 / 250)  # time vector
 Nh = 5  # Number of harmonics
 Nf = len(vec_freq)  # Number of frequencies
 Nb = 6  # Number of Blocks
-# Ns = len(list_subject_data)
 mat_Y = np.zeros([Nf, Nh * 2, N_stim])  # [Frequency, Harmonics * 2, Samples]
 
 for k in range(0, Nf):

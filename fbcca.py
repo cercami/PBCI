@@ -33,7 +33,6 @@ vec_ind_el = df_location[df_location['Label'].isin(list_el)].index  # Vector wit
 ind_ref_el = df_location['Electrode'][df_location['Label'] == 'Cz'].index[0]  # Index of reference electrode 'Cz'
 
 fs = 250  # sampling frequency in hz
-N_sec = 5
 N_pre = int(0.5 * fs)  # pre stim
 N_delay = int(0.140 * fs)  # SSVEP delay
 N_stim = int(N_sec * fs)  # stimulation
@@ -45,7 +44,6 @@ vec_t = np.arange(-0.5, 5.5, 1 / 250)  # time vector
 Nh = 5  # Number of harmonics
 Nf = len(vec_freq)  # Number of frequencies
 Nb = 6  # Number of Blocks
-Ns = len(list_subject_data)
 
 mat_Y = np.zeros([Nf, Nh * 2, N_stim])  # [Frequency, Harmonics * 2, Samples]
 
@@ -53,9 +51,6 @@ for k in range(0, Nf):
     for i in range(1, Nh + 1):
         mat_Y[k, i - 1, :] = np.sin(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
         mat_Y[k, i-1+Nh, :] = np.cos(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
-
-Ns = 35
-Nb = 6
 
 ### Frequency detection using FBCCA
 list_result = []  # list to store the subject wise results
