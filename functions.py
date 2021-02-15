@@ -258,7 +258,7 @@ def make_df(results, freqs, phase, n_freq, n_sub, n_blocks, time=None):
     return df
 
 
-def mk_df(results, threshold, time, max, freqs, n_freq, n_sub, n_blocks):
+def mk_df(results, threshold, time, rho, max, freqs, n_freq, n_sub, n_blocks):
     """create dataframe
 
     Parameters
@@ -271,6 +271,8 @@ def mk_df(results, threshold, time, max, freqs, n_freq, n_sub, n_blocks):
         time needed per trial in ms
     max : array, shape(n_freq, n_subjects * n_blocks)
         The maximum value per trial
+    max : array, shape(n_freq, n_subjects * n_blocks)
+        The maximum rho per trial
     freqs : array, shape(n_freq,)
         The stimulation frequencies
     n_freq : int
@@ -281,16 +283,17 @@ def mk_df(results, threshold, time, max, freqs, n_freq, n_sub, n_blocks):
         number of blocks
     Return
     -------
-    df : DataFrame, shape(n_trials,['Subject', 'Block', 'Frequency', 'Estimation', 'Threshold', 'Max', 'Compare', 'Time'])
+    df : DataFrame, shape(n_trials,['Subject', 'Block', 'Frequency', 'Estimation', 'Threshold', 'Max', 'Rho', 'Compare', 'Time'])
         The DataFrame
     """
 
-    list_col_names = ['Subject', 'Block', 'Frequency', 'Estimation', 'Threshold', 'Max', 'Compare', 'Time']
+    list_col_names = ['Subject', 'Block', 'Frequency', 'Estimation', 'Threshold', 'Max','Rho', 'Compare', 'Time']
     df = pd.DataFrame(columns=list_col_names)
 
     df['Estimation'] = freqs[results.astype(int)].flatten('F')
     df['Threshold'] = threshold.flatten('F')
     df['Max'] = max.flatten('F')
+    df['Rho'] = rho.flatten('F')
     df['Frequency'] = np.concatenate(n_sub * n_blocks * [freqs])
     df['Time'] = (pd.to_timedelta(time.flatten('F'))).astype('timedelta64[ms]')
 
@@ -327,12 +330,12 @@ def set_size(fig, a, b):
 
 
 def itr(df):
-    M = 40
-    P = df[0] / 100
-    if P == 100.0:
-        P = 0.99
-    T = 2 + 2
-    return (np.log2(M) + P * np.log2(P) + (1 - P) * np.log2((1 - P) / (M - 1))) * 60 / T
+    m = 40
+    p = df/100
+    if p == 100.0:
+        p = 0.99
+    t = 5 + 0.5
+    return (np.log2(m) + p * np.log2(p) + (1 - p) * np.log2((1 - p) / (m - 1))) * 60 / t
 
 
 def plot_trial(results):

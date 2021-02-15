@@ -97,7 +97,7 @@ for s in range(0, Ns):
 
             # Referencing and baseline correction
             mat_data = preprocess(list_subject_data[s][:, :, f, b], vec_ind_el, ind_ref_el, N_start, N_stop)
-            mat_data_train = mat_x_train[f,:,:]
+            mat_data_train = mat_x_train[f, :, :]
             # Create Filter Bank
             mat_filter = np.zeros([N, mat_data.shape[0], mat_data.shape[1]])
             mat_filter_train = np.zeros([N, mat_data_train.shape[0], mat_data_train.shape[1]])
