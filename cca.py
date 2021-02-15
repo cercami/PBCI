@@ -1,4 +1,5 @@
 from functions import *
+print("CCA: Subjects: " + str(Ns) + ", Data length: " + str(N_sec))
 
 ### Set Working Directory
 abspath = os.path.abspath(__file__)

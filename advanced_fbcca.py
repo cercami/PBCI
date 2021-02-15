@@ -1,4 +1,5 @@
 from functions import *
+print("Extended FBCCA: Subjects: " + str(Ns) + ", Data length: " + str(N_sec))
 
 ### Set Working Directory
 abspath = os.path.abspath(__file__)
@@ -158,8 +159,8 @@ mat_rho = np.concatenate(list_rho, axis=1)
 accuracy_all = accuracy(vec_freq, mat_result)
 accuracy_drop = acc(mat_bool_thresh)
 
-print("Extended CCA: accuracy: " + str(accuracy_all))
-print("Extended CCA: accuracy dropped: " + str(accuracy_drop))
+print("Extended FBCCA: accuracy: " + str(accuracy_all))
+print("Extended FBCCA: accuracy dropped: " + str(accuracy_drop))
 
 np.save(os.path.join(dir_results, 'ext_fbcca_mat_result_' + str(N_sec) + '_' + str(Ns)), mat_result)
 np.save(os.path.join(dir_results, 'ext_fbcca_mat_time_' + str(N_sec) + '_' + str(Ns)), mat_time)

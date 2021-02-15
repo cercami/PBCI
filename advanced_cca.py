@@ -1,5 +1,8 @@
 from functions import *
 
+print("Extended CCA: Subjects: " + str(Ns) + ", Data length: " + str(N_sec))
+
+
 ### Set Working Directory
 abspath = os.path.abspath(__file__)
 dirname = os.path.dirname(abspath)
