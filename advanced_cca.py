@@ -97,7 +97,7 @@ for s in range(0, Ns):
             # Apply CCA
             vec_rho = np.zeros(Nf)
             for k in range(0, Nf):
-                vec_rho[k] = apply_advanced_cca(mat_filtered[s, b, f, :, :], mat_Y[k, :, :], mat_X_train[k, :, :])
+                vec_rho[k] = apply_ext_cca(mat_filtered[s, b, f, :, :], mat_Y[k, :, :], mat_X_train[k, :, :])
 
             t_trial_end = datetime.now()
             mat_time[f, b] = t_trial_end - t_trial_start
