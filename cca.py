@@ -1,5 +1,5 @@
 from functions import *
-print("CCA: Subjects: " + str(Ns) + ", Data length: " + str(N_sec))
+print("CCA: Tag: " + sTag + ", Subjects: " + str(Ns) + ", Data length: " + str(N_sec))
 
 ### Set Working Directory
 abspath = os.path.abspath(__file__)
@@ -126,9 +126,9 @@ accuracy_drop = acc(mat_b_thresh)
 print("CCA: accuracy: " + str(accuracy_all))
 print("CCA: accuracy dropped: " + str(accuracy_drop))
 
-np.save(os.path.join(dir_results, 'cca_mat_result_' + str(N_sec) + '_' + str(Ns)), mat_result)
-np.save(os.path.join(dir_results, 'cca_mat_time_' + str(N_sec) + '_' + str(Ns)), mat_time)
-np.save(os.path.join(dir_results, 'cca_mat_b_' + str(N_sec) + '_' + str(Ns)), mat_b)
-np.save(os.path.join(dir_results, 'cca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns)), mat_b_thresh)
-np.save(os.path.join(dir_results, 'cca_mat_max_' + str(N_sec) + '_' + str(Ns)), mat_max)
-np.save(os.path.join(dir_results, 'cca_mat_rho_' + str(N_sec) + '_' + str(Ns)), mat_rho)
+np.save(os.path.join(dir_results, 'cca_mat_result_' + str(N_sec) + '_' + str(Ns) + '_' + sTag), mat_result)
+np.save(os.path.join(dir_results, 'cca_mat_time_' + str(N_sec) + '_' + str(Ns) + '_' + sTag), mat_time)
+np.save(os.path.join(dir_results, 'cca_mat_b_' + str(N_sec) + '_' + str(Ns) + '_' + sTag), mat_b)
+np.save(os.path.join(dir_results, 'cca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns) + '_' + sTag), mat_b_thresh)
+np.save(os.path.join(dir_results, 'cca_mat_max_' + str(N_sec) + '_' + str(Ns) + '_' + sTag), mat_max)
+np.save(os.path.join(dir_results, 'cca_mat_rho_' + str(N_sec) + '_' + str(Ns) + '_' + sTag), mat_rho)
