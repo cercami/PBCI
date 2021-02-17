@@ -83,6 +83,7 @@ N = 7  # according to paper the best amount of sub bands for M3
 f_high = 88  # Hz
 f_low = 8  # Hz
 bw = (f_high - f_low) / N  # band with of sub bands
+pb = 0.5
 vec_weights = weight(np.arange(1, N + 1))  # weights
 num_iter = 0
 
@@ -105,9 +106,9 @@ for s in range(0, Ns):
             mat_filter = np.zeros([N, mat_data.shape[0], mat_data.shape[1]])
             for n in range(0, N):
                 iir_params = mne.filter.construct_iir_filter(iir_params, f_pass=[f_low + n * bw, f_high],
-                                                             f_stop=[f_low + n * bw - 2, f_high+2], sfreq=fs)
+                                                             f_stop=[f_low + n * bw - pb, f_high+pb], sfreq=fs)
 
-                mat_filter[n] = mne.filter.filter_data(mat_data, sfreq=fs, l_freq=f_low + n * bw, h_freq=f_high + 2,
+                mat_filter[n] = mne.filter.filter_data(mat_data, sfreq=fs, l_freq=f_low + n * bw, h_freq=f_high,
                                                        method='iir',
                                                        iir_params=iir_params,
                                                        verbose=False)

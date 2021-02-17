@@ -79,8 +79,12 @@ list_rho = []
 list_max = []
 
 # create iir filter
+f_high = 70  # Hz
+f_low = 7  # Hz
+pb = 0.5
+
 iir_params = dict(ftype='cheby1', btype='bandpass', output='sos', gpass=3, gstop=20, rp=3, rs=3)
-iir_params = mne.filter.construct_iir_filter(iir_params, f_pass=[7, 70], f_stop=[5, 72], sfreq=fs)
+iir_params = mne.filter.construct_iir_filter(iir_params, f_pass=[f_low,f_high], f_stop=[f_low-pb, f_high+pb], sfreq=fs)
 
 # do classification
 num_iter = 0
