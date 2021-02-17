@@ -17,50 +17,55 @@ vec_freq = dict_freq_phase['freqs'][0]
 vec_phase = dict_freq_phase['phases'][0]
 
 # list_subject_data = loadData(dirname, '.mat')  # load all subject data
+
+sTag = '_' + str(sTag)
+sSec = '_' + str(N_sec)
+sNs = '_' + str(Ns)
+sTag = ""
 cca_mat_result = np.load(
-    os.path.join(dir_results, 'cca_mat_result_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-cca_mat_b = np.load(os.path.join(dir_results, 'cca_mat_b_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-cca_mat_b_thresh = np.load(os.path.join(dir_results, 'cca_mat_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-cca_mat_max = np.load(os.path.join(dir_results, 'cca_mat_max_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-cca_mat_rho = np.load(os.path.join(dir_results, 'cca_mat_rho_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-cca_mat_time = np.load(os.path.join(dir_results, 'cca_mat_time_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'),
+    os.path.join(dir_results, 'cca_mat_result' + sSec + sNs + sTag + '.npy'))
+cca_mat_b = np.load(os.path.join(dir_results, 'cca_mat_b' + sSec + sNs + sTag + '.npy'))
+cca_mat_b_thresh = np.load(os.path.join(dir_results, 'cca_mat_b_thresh' + sSec + sNs + sTag + '.npy'))
+cca_mat_max = np.load(os.path.join(dir_results, 'cca_mat_max' + sSec + sNs + sTag + '.npy'))
+cca_mat_rho = np.load(os.path.join(dir_results, 'cca_mat_rho' + sSec + sNs + sTag + '.npy'))
+cca_mat_time = np.load(os.path.join(dir_results, 'cca_mat_time' + sSec + sNs + sTag + '.npy'),
                        allow_pickle=True)
 
 ext_cca_mat_result = np.load(
-    os.path.join(dir_results, 'ext_cca_mat_result_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-ext_cca_mat_b = np.load(os.path.join(dir_results, 'ext_cca_mat_b_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_cca_mat_result' + sSec + sNs + sTag + '.npy'))
+ext_cca_mat_b = np.load(os.path.join(dir_results, 'ext_cca_mat_b' + sSec + sNs + sTag + '.npy'))
 ext_cca_mat_b_thresh = np.load(
-    os.path.join(dir_results, 'ext_cca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_cca_mat_b_thresh' + sSec + sNs + sTag + '.npy'))
 ext_cca_mat_max = np.load(
-    os.path.join(dir_results, 'ext_cca_mat_max_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_cca_mat_max' + sSec + sNs + sTag + '.npy'))
 ext_cca_mat_rho = np.load(
-    os.path.join(dir_results, 'ext_cca_mat_rho_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_cca_mat_rho' + sSec + sNs + sTag + '.npy'))
 ext_cca_mat_time = np.load(
-    os.path.join(dir_results, 'ext_cca_mat_time_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'),
+    os.path.join(dir_results, 'ext_cca_mat_time' + sSec + sNs + sTag + '.npy'),
     allow_pickle=True)
 
 fbcca_mat_result = np.load(
-    os.path.join(dir_results, 'fbcca_mat_result_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-fbcca_mat_b = np.load(os.path.join(dir_results, 'fbcca_mat_b_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'fbcca_mat_result' + sSec + sNs + sTag + '.npy'))
+fbcca_mat_b = np.load(os.path.join(dir_results, 'fbcca_mat_b' + sSec + sNs + sTag + '.npy'))
 fbcca_mat_b_thresh = np.load(
-    os.path.join(dir_results, 'fbcca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-fbcca_mat_max = np.load(os.path.join(dir_results, 'fbcca_mat_max_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-fbcca_mat_rho = np.load(os.path.join(dir_results, 'fbcca_mat_rho_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'fbcca_mat_b_thresh' + sSec + sNs + sTag + '.npy'))
+fbcca_mat_max = np.load(os.path.join(dir_results, 'fbcca_mat_max' + sSec + sNs + sTag + '.npy'))
+fbcca_mat_rho = np.load(os.path.join(dir_results, 'fbcca_mat_rho' + sSec + sNs + sTag + '.npy'))
 fbcca_mat_time = np.load(
-    os.path.join(dir_results, 'fbcca_mat_time_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'), allow_pickle=True)
+    os.path.join(dir_results, 'fbcca_mat_time' + sSec + sNs + sTag + '.npy'), allow_pickle=True)
 
 ext_fbcca_mat_result = np.load(
-    os.path.join(dir_results, 'ext_fbcca_mat_result_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_fbcca_mat_result' + sSec + sNs + sTag + '.npy'))
 ext_fbcca_mat_b = np.load(
-    os.path.join(dir_results, 'ext_fbcca_mat_b_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_fbcca_mat_b' + sSec + sNs + sTag + '.npy'))
 ext_fbcca_mat_b_thresh = np.load(
-    os.path.join(dir_results, 'ext_fbcca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_fbcca_mat_b_thresh' + sSec + sNs + sTag + '.npy'))
 ext_fbcca_mat_max = np.load(
-    os.path.join(dir_results, 'ext_fbcca_mat_max_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_fbcca_mat_max' + sSec + sNs + sTag + '.npy'))
 ext_fbcca_mat_rho = np.load(
-    os.path.join(dir_results, 'ext_fbcca_mat_rho_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_fbcca_mat_rho' + sSec + sNs + sTag + '.npy'))
 ext_fbcca_mat_time = np.load(
-    os.path.join(dir_results, 'ext_fbcca_mat_time_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'),
+    os.path.join(dir_results, 'ext_fbcca_mat_time' + sSec + sNs + sTag + '.npy'),
     allow_pickle=True)
 
 ## Convert to pandas dataframe
