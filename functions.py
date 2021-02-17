@@ -44,12 +44,14 @@ def loadData(fpath, fname):
         try:
             if file.endswith(fname) and file != "Freq_Phase.mat":
                 file_load = os.path.join(fpath, str(file))
-                print(".mat Files found:\t", file)
+                # print(".mat Files found:\t", file)
                 csvfiles.append(loadmat(str(file_load))['data'])
                 counter += 1
         except Exception as e:
             raise e
             print("No files found here!")
+
+    print(".mat Files found:\t", counter)
     return csvfiles
 
 
