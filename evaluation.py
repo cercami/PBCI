@@ -1,6 +1,27 @@
 from functions import *
+import argparse
 
 pd.options.mode.chained_assignment = None  # default='warn'
+
+### Parser
+parser = argparse.ArgumentParser(description='Add some integers.')
+
+parser.add_argument('--length', action='store', type=int, default=5,
+                    help='Length of data to take into account (0,5].')
+
+parser.add_argument('--subjects', action='store', type=int, default=35,
+                    help='Number of subjects to use [1,35].')
+
+parser.add_argument('--tag', action='store', default='',
+                    help='Tag to add to the files.')
+
+args = parser.parse_args()
+N_sec = args.length
+Ns = args.subjects
+sTag = args.tag
+
+print("Evaluation: Tag: " + sTag + ", Subjects: " + str(Ns) + ", Data length: " + str(N_sec))
+
 
 ### Set Working Directory
 abspath = os.path.abspath(__file__)
@@ -17,50 +38,56 @@ vec_freq = dict_freq_phase['freqs'][0]
 vec_phase = dict_freq_phase['phases'][0]
 
 # list_subject_data = loadData(dirname, '.mat')  # load all subject data
+
+sTag = '_' + str(sTag)
+sSec = '_' + str(N_sec)
+if sTag != "":
+    sNs = '_' + str(Ns)
+
 cca_mat_result = np.load(
-    os.path.join(dir_results, 'cca_mat_result_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-cca_mat_b = np.load(os.path.join(dir_results, 'cca_mat_b_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-cca_mat_b_thresh = np.load(os.path.join(dir_results, 'cca_mat_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-cca_mat_max = np.load(os.path.join(dir_results, 'cca_mat_max_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-cca_mat_rho = np.load(os.path.join(dir_results, 'cca_mat_rho_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-cca_mat_time = np.load(os.path.join(dir_results, 'cca_mat_time_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'),
+    os.path.join(dir_results, 'cca_mat_result' + sSec + sNs + sTag + '.npy'))
+cca_mat_b = np.load(os.path.join(dir_results, 'cca_mat_b' + sSec + sNs + sTag + '.npy'))
+cca_mat_b_thresh = np.load(os.path.join(dir_results, 'cca_mat_b_thresh' + sSec + sNs + sTag + '.npy'))
+cca_mat_max = np.load(os.path.join(dir_results, 'cca_mat_max' + sSec + sNs + sTag + '.npy'))
+cca_mat_rho = np.load(os.path.join(dir_results, 'cca_mat_rho' + sSec + sNs + sTag + '.npy'))
+cca_mat_time = np.load(os.path.join(dir_results, 'cca_mat_time' + sSec + sNs + sTag + '.npy'),
                        allow_pickle=True)
 
 ext_cca_mat_result = np.load(
-    os.path.join(dir_results, 'ext_cca_mat_result_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-ext_cca_mat_b = np.load(os.path.join(dir_results, 'ext_cca_mat_b_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_cca_mat_result' + sSec + sNs + sTag + '.npy'))
+ext_cca_mat_b = np.load(os.path.join(dir_results, 'ext_cca_mat_b' + sSec + sNs + sTag + '.npy'))
 ext_cca_mat_b_thresh = np.load(
-    os.path.join(dir_results, 'ext_cca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_cca_mat_b_thresh' + sSec + sNs + sTag + '.npy'))
 ext_cca_mat_max = np.load(
-    os.path.join(dir_results, 'ext_cca_mat_max_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_cca_mat_max' + sSec + sNs + sTag + '.npy'))
 ext_cca_mat_rho = np.load(
-    os.path.join(dir_results, 'ext_cca_mat_rho_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_cca_mat_rho' + sSec + sNs + sTag + '.npy'))
 ext_cca_mat_time = np.load(
-    os.path.join(dir_results, 'ext_cca_mat_time_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'),
+    os.path.join(dir_results, 'ext_cca_mat_time' + sSec + sNs + sTag + '.npy'),
     allow_pickle=True)
 
 fbcca_mat_result = np.load(
-    os.path.join(dir_results, 'fbcca_mat_result_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-fbcca_mat_b = np.load(os.path.join(dir_results, 'fbcca_mat_b_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'fbcca_mat_result' + sSec + sNs + sTag + '.npy'))
+fbcca_mat_b = np.load(os.path.join(dir_results, 'fbcca_mat_b' + sSec + sNs + sTag + '.npy'))
 fbcca_mat_b_thresh = np.load(
-    os.path.join(dir_results, 'fbcca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-fbcca_mat_max = np.load(os.path.join(dir_results, 'fbcca_mat_max_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
-fbcca_mat_rho = np.load(os.path.join(dir_results, 'fbcca_mat_rho_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'fbcca_mat_b_thresh' + sSec + sNs + sTag + '.npy'))
+fbcca_mat_max = np.load(os.path.join(dir_results, 'fbcca_mat_max' + sSec + sNs + sTag + '.npy'))
+fbcca_mat_rho = np.load(os.path.join(dir_results, 'fbcca_mat_rho' + sSec + sNs + sTag + '.npy'))
 fbcca_mat_time = np.load(
-    os.path.join(dir_results, 'fbcca_mat_time_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'), allow_pickle=True)
+    os.path.join(dir_results, 'fbcca_mat_time' + sSec + sNs + sTag + '.npy'), allow_pickle=True)
 
 ext_fbcca_mat_result = np.load(
-    os.path.join(dir_results, 'ext_fbcca_mat_result_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_fbcca_mat_result' + sSec + sNs + sTag + '.npy'))
 ext_fbcca_mat_b = np.load(
-    os.path.join(dir_results, 'ext_fbcca_mat_b_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_fbcca_mat_b' + sSec + sNs + sTag + '.npy'))
 ext_fbcca_mat_b_thresh = np.load(
-    os.path.join(dir_results, 'ext_fbcca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_fbcca_mat_b_thresh' + sSec + sNs + sTag + '.npy'))
 ext_fbcca_mat_max = np.load(
-    os.path.join(dir_results, 'ext_fbcca_mat_max_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_fbcca_mat_max' + sSec + sNs + sTag + '.npy'))
 ext_fbcca_mat_rho = np.load(
-    os.path.join(dir_results, 'ext_fbcca_mat_rho_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+    os.path.join(dir_results, 'ext_fbcca_mat_rho' + sSec + sNs + sTag + '.npy'))
 ext_fbcca_mat_time = np.load(
-    os.path.join(dir_results, 'ext_fbcca_mat_time_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'),
+    os.path.join(dir_results, 'ext_fbcca_mat_time' + sSec + sNs + sTag + '.npy'),
     allow_pickle=True)
 
 ## Convert to pandas dataframe
@@ -131,12 +158,12 @@ set_style(fig3, ax3)
 set_size(fig3, 3, 2.2)
 # plt.setp(ax3.get_xticklabels(), rotation=45, ha='right')
 
-fig1.savefig(os.path.join(dir_figures, 'accuracy.pdf'), dpi=300)
-fig1.savefig(os.path.join(dir_figures, 'accuracy.png'), dpi=300)
-fig2.savefig(os.path.join(dir_figures, 'time.pdf'), dpi=300)
-fig2.savefig(os.path.join(dir_figures, 'time.png'), dpi=300)
-fig3.savefig(os.path.join(dir_figures, 'itr.pdf'), dpi=300)
-fig3.savefig(os.path.join(dir_figures, 'itr.png'), dpi=300)
+fig1.savefig(os.path.join(dir_figures, 'accuracy' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig1.savefig(os.path.join(dir_figures, 'accuracy' + sSec + sNs + sTag + '.png'), dpi=300)
+fig2.savefig(os.path.join(dir_figures, 'time' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig2.savefig(os.path.join(dir_figures, 'time' + sSec + sNs + sTag + '.png'), dpi=300)
+fig3.savefig(os.path.join(dir_figures, 'itr' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig3.savefig(os.path.join(dir_figures, 'itr' + sSec + sNs + sTag + '.png'), dpi=300)
 
 print("=====================================")
 print(
@@ -170,17 +197,17 @@ print("ITR Extended FBCCA Mean: " + str(df_subject['ITR ext FBCCA'].mean()) + ",
 print("=====================================")
 
 fig4, ax4 = plot_trial(cca_mat_result)
-fig4.savefig(os.path.join(dir_figures, 'cca_freq.pdf'), dpi=300)
-fig4.savefig(os.path.join(dir_figures, 'cca_freq.png'), dpi=300)
+fig4.savefig(os.path.join(dir_figures, 'cca_freq' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig4.savefig(os.path.join(dir_figures, 'cca_freq' + sSec + sNs + sTag + '.png'), dpi=300)
 
 fig5, ax5 = plot_trial(fbcca_mat_result)
-fig5.savefig(os.path.join(dir_figures, 'fbcca_freq.pdf'), dpi=300)
-fig5.savefig(os.path.join(dir_figures, 'fbcca_freq.png'), dpi=300)
+fig5.savefig(os.path.join(dir_figures, 'fbcca_freq' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig5.savefig(os.path.join(dir_figures, 'fbcca_freq' + sSec + sNs + sTag + '.png'), dpi=300)
 
 fig6, ax6 = plot_trial(ext_cca_mat_result)
-fig6.savefig(os.path.join(dir_figures, 'ext_cca_freq.pdf'), dpi=300)
-fig6.savefig(os.path.join(dir_figures, 'ext_cca_freq.png'), dpi=300)
+fig6.savefig(os.path.join(dir_figures, 'ext_cca_freq' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig6.savefig(os.path.join(dir_figures, 'ext_cca_freq' + sSec + sNs + sTag + '.png'), dpi=300)
 
 fig7, ax7 = plot_trial(ext_fbcca_mat_result)
-fig7.savefig(os.path.join(dir_figures, 'ext_fbcca_freq.pdf'), dpi=300)
-fig7.savefig(os.path.join(dir_figures, 'ext_fbcca_freq.png'), dpi=300)
+fig7.savefig(os.path.join(dir_figures, 'ext_fbcca_freq' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig7.savefig(os.path.join(dir_figures, 'ext_fbcca_freq' + sSec + sNs + sTag + '.png'), dpi=300)
