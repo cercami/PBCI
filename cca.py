@@ -128,7 +128,8 @@ print("CCA: accuracy dropped: " + str(accuracy_drop))
 
 sTag = '_' + str(sTag)
 sSec = '_' + str(N_sec)
-sNs = '_' + str(Ns)
+if sTag != "":
+    sNs = '_' + str(Ns)
 
 np.save(os.path.join(dir_results, 'cca_mat_result' + sSec + sNs + sTag), mat_result)
 np.save(os.path.join(dir_results, 'cca_mat_time' + sSec + sNs + sTag), mat_time)

@@ -20,8 +20,9 @@ vec_phase = dict_freq_phase['phases'][0]
 
 sTag = '_' + str(sTag)
 sSec = '_' + str(N_sec)
-sNs = '_' + str(Ns)
-sTag = ""
+if sTag != "":
+    sNs = '_' + str(Ns)
+
 cca_mat_result = np.load(
     os.path.join(dir_results, 'cca_mat_result' + sSec + sNs + sTag + '.npy'))
 cca_mat_b = np.load(os.path.join(dir_results, 'cca_mat_b' + sSec + sNs + sTag + '.npy'))
@@ -136,12 +137,12 @@ set_style(fig3, ax3)
 set_size(fig3, 3, 2.2)
 # plt.setp(ax3.get_xticklabels(), rotation=45, ha='right')
 
-fig1.savefig(os.path.join(dir_figures, 'accuracy.pdf'), dpi=300)
-fig1.savefig(os.path.join(dir_figures, 'accuracy.png'), dpi=300)
-fig2.savefig(os.path.join(dir_figures, 'time.pdf'), dpi=300)
-fig2.savefig(os.path.join(dir_figures, 'time.png'), dpi=300)
-fig3.savefig(os.path.join(dir_figures, 'itr.pdf'), dpi=300)
-fig3.savefig(os.path.join(dir_figures, 'itr.png'), dpi=300)
+fig1.savefig(os.path.join(dir_figures, 'accuracy' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig1.savefig(os.path.join(dir_figures, 'accuracy' + sSec + sNs + sTag + '.png'), dpi=300)
+fig2.savefig(os.path.join(dir_figures, 'time' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig2.savefig(os.path.join(dir_figures, 'time' + sSec + sNs + sTag + '.png'), dpi=300)
+fig3.savefig(os.path.join(dir_figures, 'itr' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig3.savefig(os.path.join(dir_figures, 'itr' + sSec + sNs + sTag + '.png'), dpi=300)
 
 print("=====================================")
 print(
@@ -175,17 +176,17 @@ print("ITR Extended FBCCA Mean: " + str(df_subject['ITR ext FBCCA'].mean()) + ",
 print("=====================================")
 
 fig4, ax4 = plot_trial(cca_mat_result)
-fig4.savefig(os.path.join(dir_figures, 'cca_freq.pdf'), dpi=300)
-fig4.savefig(os.path.join(dir_figures, 'cca_freq.png'), dpi=300)
+fig4.savefig(os.path.join(dir_figures, 'cca_freq' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig4.savefig(os.path.join(dir_figures, 'cca_freq' + sSec + sNs + sTag + '.png'), dpi=300)
 
 fig5, ax5 = plot_trial(fbcca_mat_result)
-fig5.savefig(os.path.join(dir_figures, 'fbcca_freq.pdf'), dpi=300)
-fig5.savefig(os.path.join(dir_figures, 'fbcca_freq.png'), dpi=300)
+fig5.savefig(os.path.join(dir_figures, 'fbcca_freq' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig5.savefig(os.path.join(dir_figures, 'fbcca_freq' + sSec + sNs + sTag + '.png'), dpi=300)
 
 fig6, ax6 = plot_trial(ext_cca_mat_result)
-fig6.savefig(os.path.join(dir_figures, 'ext_cca_freq.pdf'), dpi=300)
-fig6.savefig(os.path.join(dir_figures, 'ext_cca_freq.png'), dpi=300)
+fig6.savefig(os.path.join(dir_figures, 'ext_cca_freq' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig6.savefig(os.path.join(dir_figures, 'ext_cca_freq' + sSec + sNs + sTag + '.png'), dpi=300)
 
 fig7, ax7 = plot_trial(ext_fbcca_mat_result)
-fig7.savefig(os.path.join(dir_figures, 'ext_fbcca_freq.pdf'), dpi=300)
-fig7.savefig(os.path.join(dir_figures, 'ext_fbcca_freq.png'), dpi=300)
+fig7.savefig(os.path.join(dir_figures, 'ext_fbcca_freq' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig7.savefig(os.path.join(dir_figures, 'ext_fbcca_freq' + sSec + sNs + sTag + '.png'), dpi=300)
