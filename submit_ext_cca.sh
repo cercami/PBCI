@@ -17,6 +17,7 @@ done
 echo "$0 executed with: "
 echo "subjects = $subjects, length = $length, tag = $tag"
 
+### Submit task
 ### General options
 ### –- specify queue: gpuv100, gputitanxpascal, gpuk40, gpum2050 --
 #BSUB -q gpuv100
