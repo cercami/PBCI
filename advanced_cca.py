@@ -80,6 +80,9 @@ list_bool_thresh = []  # list to store the classification with thresholds
 list_rho = []
 list_max = []
 
+iir_params = dict(ftype='cheby1', btype='bandpass', output='sos', gpass=3, gstop=20, rp=3, rs=3)
+iir_params = mne.filter.construct_iir_filter(iir_params, f_pass=[7, 70], f_stop=[5, 72], sfreq=fs)
+
 num_iter = 0
 mat_filtered = np.zeros([Ns, Nb, Nf, 9, N_stim])
 for s in range(0, Ns):
@@ -88,7 +91,10 @@ for s in range(0, Ns):
             # Referencing and baseline correction
             mat_data = preprocess(list_subject_data[s][:, :, f, b], vec_ind_el, ind_ref_el, N_start, N_stop)
             # Filter data
-            mat_filt = mne.filter.filter_data(mat_data, fs, 7, 70, method='fir', phase='zero-double', verbose=False)
+            # mat_filt = mne.filter.filter_data(mat_data, fs, 7, 70, method='fir', phase='zero-double', verbose=False)
+            mat_filt = mne.filter.filter_data(mat_data, sfreq=fs, l_freq=7, h_freq=70, method='iir',
+                                              iir_params=iir_params,
+                                              verbose=False)
             mat_filtered[s, b, f, :, :] = mat_filt
 
 for s in range(0, Ns):

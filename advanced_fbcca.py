@@ -69,7 +69,7 @@ mat_Y = np.zeros([Nf, Nh * 2, N_stim])  # [Frequency, Harmonics * 2, Samples]
 for k in range(0, Nf):
     for i in range(1, Nh + 1):
         mat_Y[k, i - 1, :] = np.sin(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
-        mat_Y[k, i-1+Nh, :] = np.cos(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
+        mat_Y[k, i - 1 + Nh, :] = np.cos(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
 
 ### Frequency detection using advanced FBCCA
 list_result = []  # list to store the subject wise results
@@ -85,6 +85,7 @@ f_low = 8  # Hz
 bw = (f_high - f_low) / N  # band with of sub bands
 vec_weights = weight(np.arange(1, N + 1))  # weights
 num_iter = 0
+iir_params = dict(ftype='cheby1', btype='bandpass', output='sos', gpass=3, gstop=20, rp=3, rs=3)
 
 mat_processed = np.zeros([Ns, Nb, Nf, 9, N_stim])
 for s in range(0, Ns):
@@ -121,13 +122,18 @@ for s in range(0, Ns):
 
             # create N sub-bands
             for n in range(0, N):
-                mat_filter[n] = mne.filter.filter_data(mat_data, fs, l_freq=f_low + n * bw, h_freq=f_high, method='fir',
-                                                       l_trans_bandwidth=2, h_trans_bandwidth=2,
-                                                       phase='zero-double', verbose=False)
-                mat_filter_train[n] = mne.filter.filter_data(mat_data_train, fs, l_freq=f_low + n * bw, h_freq=f_high,
-                                                             method='fir',
-                                                             l_trans_bandwidth=2, h_trans_bandwidth=2,
-                                                             phase='zero-double', verbose=False)
+                iir_params = mne.filter.construct_iir_filter(iir_params, f_pass=[f_low + n * bw, f_high],
+                                                             f_stop=[f_low + n * bw - 2, f_high + 2], sfreq=fs)
+
+                mat_filter[n] = mne.filter.filter_data(mat_data, sfreq=fs, l_freq=f_low + n * bw, h_freq=f_high,
+                                                       method='iir',
+                                                       iir_params=iir_params,
+                                                       verbose=False)
+                mat_filter_train[n] = mne.filter.filter_data(mat_data_train, sfreq=fs, l_freq=f_low + n * bw,
+                                                             h_freq=f_high,
+                                                             method='iir',
+                                                             iir_params=iir_params,
+                                                             verbose=False)
 
             vec_rho = np.zeros(Nf)
 

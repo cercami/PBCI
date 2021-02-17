@@ -68,7 +68,7 @@ mat_Y = np.zeros([Nf, Nh * 2, N_stim])  # [Frequency, Harmonics * 2, Samples]
 for k in range(0, Nf):
     for i in range(1, Nh + 1):
         mat_Y[k, i - 1, :] = np.sin(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
-        mat_Y[k, i-1+Nh, :] = np.cos(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
+        mat_Y[k, i - 1 + Nh, :] = np.cos(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
 
 ### Frequency detection using CCA
 list_time = []  # list to store the time used per trial
@@ -99,10 +99,10 @@ for s in range(0, Ns):
             mat_data = preprocess(list_subject_data[s][:, :, f, b], vec_ind_el, ind_ref_el, N_start, N_stop)
 
             # Filter data
-            #mat_filt = mne.filter.filter_data(mat_data, fs, 7, 70, method='fir', phase='zero-double', verbose=False)
+            # mat_filt = mne.filter.filter_data(mat_data, fs, 7, 70, method='fir', phase='zero-double', verbose=False)
             mat_filt = mne.filter.filter_data(mat_data, sfreq=fs, l_freq=7, h_freq=70, method='iir',
-                                                  iir_params=iir_params,
-                                                  verbose=False)
+                                              iir_params=iir_params,
+                                              verbose=False)
             vec_rho = np.zeros(Nf)
 
             # Apply CCA

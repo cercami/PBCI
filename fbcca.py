@@ -104,9 +104,13 @@ for s in range(0, Ns):
             # Create Filter Bank
             mat_filter = np.zeros([N, mat_data.shape[0], mat_data.shape[1]])
             for n in range(0, N):
-                mat_filter[n] = mne.filter.filter_data(mat_data, fs, l_freq=f_low + n * bw, h_freq=f_high, method='fir',
-                                                       l_trans_bandwidth=2, h_trans_bandwidth=2,
-                                                       phase='zero-double', verbose=False)
+                iir_params = mne.filter.construct_iir_filter(iir_params, f_pass=[f_low + n * bw, f_high],
+                                                             f_stop=[f_low + n * bw - 2, f_high+2], sfreq=fs)
+
+                mat_filter[n] = mne.filter.filter_data(mat_data, sfreq=fs, l_freq=f_low + n * bw, h_freq=f_high + 2,
+                                                       method='iir',
+                                                       iir_params=iir_params,
+                                                       verbose=False)
 
             vec_rho = np.zeros(Nf)
             # Apply FBCCA
