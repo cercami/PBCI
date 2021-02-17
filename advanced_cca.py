@@ -72,9 +72,6 @@ for k in range(0, Nf):
         mat_Y[k, i - 1, :] = np.sin(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
         mat_Y[k, i-1+Nh, :] = np.cos(2 * np.pi * i * vec_freq[k] * vec_t[N_start:N_stop] + vec_phase[k])
 
-Ns = 35
-Nb = 6
-
 ### Frequency detection using advanced CCA
 list_result = []  # list to store the subject wise results
 list_time = []  # list to store the time per trial
