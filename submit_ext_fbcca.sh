@@ -1,9 +1,27 @@
 #!/bin/sh
+### get parmeters
+for ARGUMENT in "$@"
+do
+
+    KEY=$(echo $ARGUMENT | cut -f1 -d=)
+    VALUE=$(echo $ARGUMENT | cut -f2 -d=)
+
+    case "$KEY" in
+            length)                     length=${VALUE} ;;
+            subjects)                   subjects=${VALUE} ;;
+            tag)                        tag=${VALUE} ;;
+            *)
+    esac
+
+done
+echo "$0 executed with: "
+echo "subjects = $subjects, length = $length, tag = $tag"
+
 ### General options
 ### –- specify queue: gpuv100, gputitanxpascal, gpuk40, gpum2050 --
 #BSUB -q gpuv100
 ### -- set the job Name --
-#BSUB -J ext_fbcca
+#BSUB -J ext_fbcca_$tag
 ### -- ask for number of cores (default: 1) --
 #BSUB -n 1
 ### -- Select the resources: 1 gpu in exclusive process mode --
@@ -41,4 +59,4 @@ source pbci/bin/activate
 ##################################################################
 # Execute your own code by replacing the sanity check code below #
 ##################################################################
-python3 advanced_fbcca.py --length 5 --subjects 35
+python3 advanced_fbcca.py --length $length --subjects $subjects --tag $tag
