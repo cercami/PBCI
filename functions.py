@@ -30,10 +30,13 @@ parser.add_argument('--length', action='store', type=int, default='5',
 parser.add_argument('--subjects', action='store', type=int, default='35',
                     help='Number of subjects to use [1,35].')
 
+parser.add_argument('--tag', action='store', default='',
+                    help='Tag to add to the files.')
+
 args = parser.parse_args()
 N_sec = args.length
 Ns = args.subjects
-
+sTag = args.tag
 
 ### Functions
 def loadData(fpath, fname):

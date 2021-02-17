@@ -1,4 +1,5 @@
 from functions import *
+
 pd.options.mode.chained_assignment = None  # default='warn'
 
 ### Set Working Directory
@@ -16,33 +17,51 @@ vec_freq = dict_freq_phase['freqs'][0]
 vec_phase = dict_freq_phase['phases'][0]
 
 # list_subject_data = loadData(dirname, '.mat')  # load all subject data
-cca_mat_result = np.load(os.path.join(dir_results, 'cca_mat_result_5_35.npy'))
-cca_mat_b = np.load(os.path.join(dir_results, 'cca_mat_b_5_35.npy'))
-cca_mat_b_thresh = np.load(os.path.join(dir_results, 'cca_mat_b_thresh_5_35.npy'))
-cca_mat_max = np.load(os.path.join(dir_results, 'cca_mat_max_5_35.npy'))
-cca_mat_rho = np.load(os.path.join(dir_results, 'cca_mat_rho_5_35.npy'))
-cca_mat_time = np.load(os.path.join(dir_results, 'cca_mat_time_5_35.npy'), allow_pickle=True)
+cca_mat_result = np.load(
+    os.path.join(dir_results, 'cca_mat_result_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+cca_mat_b = np.load(os.path.join(dir_results, 'cca_mat_b_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+cca_mat_b_thresh = np.load(os.path.join(dir_results, 'cca_mat_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+cca_mat_max = np.load(os.path.join(dir_results, 'cca_mat_max_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+cca_mat_rho = np.load(os.path.join(dir_results, 'cca_mat_rho_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+cca_mat_time = np.load(os.path.join(dir_results, 'cca_mat_time_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'),
+                       allow_pickle=True)
 
-ext_cca_mat_result = np.load(os.path.join(dir_results, 'ext_cca_mat_result_5_35.npy'))
-ext_cca_mat_b = np.load(os.path.join(dir_results, 'ext_cca_mat_b_5_35.npy'))
-ext_cca_mat_b_thresh = np.load(os.path.join(dir_results, 'ext_cca_mat_b_thresh_5_35.npy'))
-ext_cca_mat_max = np.load(os.path.join(dir_results, 'ext_cca_mat_max_5_35.npy'))
-ext_cca_mat_rho = np.load(os.path.join(dir_results, 'ext_cca_mat_rho_5_35.npy'))
-ext_cca_mat_time = np.load(os.path.join(dir_results, 'ext_cca_mat_time_5_35.npy'), allow_pickle=True)
+ext_cca_mat_result = np.load(
+    os.path.join(dir_results, 'ext_cca_mat_result_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+ext_cca_mat_b = np.load(os.path.join(dir_results, 'ext_cca_mat_b_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+ext_cca_mat_b_thresh = np.load(
+    os.path.join(dir_results, 'ext_cca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+ext_cca_mat_max = np.load(
+    os.path.join(dir_results, 'ext_cca_mat_max_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+ext_cca_mat_rho = np.load(
+    os.path.join(dir_results, 'ext_cca_mat_rho_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+ext_cca_mat_time = np.load(
+    os.path.join(dir_results, 'ext_cca_mat_time_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'),
+    allow_pickle=True)
 
-fbcca_mat_result = np.load(os.path.join(dir_results, 'fbcca_mat_result_5_35.npy'))
-fbcca_mat_b = np.load(os.path.join(dir_results, 'fbcca_mat_b_5_35.npy'))
-fbcca_mat_b_thresh = np.load(os.path.join(dir_results, 'fbcca_mat_b_thresh_5_35.npy'))
-fbcca_mat_max = np.load(os.path.join(dir_results, 'fbcca_mat_max_5_35.npy'))
-fbcca_mat_rho = np.load(os.path.join(dir_results, 'fbcca_mat_rho_5_35.npy'))
-fbcca_mat_time = np.load(os.path.join(dir_results, 'fbcca_mat_time_5_35.npy'), allow_pickle=True)
+fbcca_mat_result = np.load(
+    os.path.join(dir_results, 'fbcca_mat_result_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+fbcca_mat_b = np.load(os.path.join(dir_results, 'fbcca_mat_b_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+fbcca_mat_b_thresh = np.load(
+    os.path.join(dir_results, 'fbcca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+fbcca_mat_max = np.load(os.path.join(dir_results, 'fbcca_mat_max_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+fbcca_mat_rho = np.load(os.path.join(dir_results, 'fbcca_mat_rho_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+fbcca_mat_time = np.load(
+    os.path.join(dir_results, 'fbcca_mat_time_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'), allow_pickle=True)
 
-ext_fbcca_mat_result = np.load(os.path.join(dir_results, 'ext_fbcca_mat_result_5_35.npy'))
-ext_fbcca_mat_b = np.load(os.path.join(dir_results, 'ext_fbcca_mat_b_5_35.npy'))
-ext_fbcca_mat_b_thresh = np.load(os.path.join(dir_results, 'ext_fbcca_mat_b_thresh_5_35.npy'))
-ext_fbcca_mat_max = np.load(os.path.join(dir_results, 'ext_fbcca_mat_max_5_35.npy'))
-ext_fbcca_mat_rho = np.load(os.path.join(dir_results, 'ext_fbcca_mat_rho_5_35.npy'))
-ext_fbcca_mat_time = np.load(os.path.join(dir_results, 'ext_fbcca_mat_time_5_35.npy'), allow_pickle=True)
+ext_fbcca_mat_result = np.load(
+    os.path.join(dir_results, 'ext_fbcca_mat_result_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+ext_fbcca_mat_b = np.load(
+    os.path.join(dir_results, 'ext_fbcca_mat_b_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+ext_fbcca_mat_b_thresh = np.load(
+    os.path.join(dir_results, 'ext_fbcca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+ext_fbcca_mat_max = np.load(
+    os.path.join(dir_results, 'ext_fbcca_mat_max_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+ext_fbcca_mat_rho = np.load(
+    os.path.join(dir_results, 'ext_fbcca_mat_rho_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'))
+ext_fbcca_mat_time = np.load(
+    os.path.join(dir_results, 'ext_fbcca_mat_time_' + str(N_sec) + '_' + str(Ns) + '_' + sTag + '.npy'),
+    allow_pickle=True)
 
 ## Convert to pandas dataframe
 Ns = 35
@@ -51,9 +70,12 @@ Nf = 40
 fs = 250  # sampling frequency in hz
 
 df_cca = mk_df(cca_mat_result, cca_mat_b_thresh, cca_mat_time, cca_mat_max, cca_mat_rho, vec_freq, Nf, Ns, Nb)
-df_fbcca = mk_df(fbcca_mat_result, fbcca_mat_b_thresh, fbcca_mat_time, fbcca_mat_max, fbcca_mat_rho, vec_freq, Nf, Ns, Nb)
-df_ext_cca = mk_df(ext_cca_mat_result, ext_cca_mat_b_thresh, ext_cca_mat_time, ext_cca_mat_max, ext_cca_mat_rho, vec_freq, Nf, Ns, Nb)
-df_ext_fbcca = mk_df(ext_fbcca_mat_result, ext_fbcca_mat_b_thresh, ext_fbcca_mat_time, ext_fbcca_mat_max, ext_fbcca_mat_rho, vec_freq, Nf, Ns, Nb)
+df_fbcca = mk_df(fbcca_mat_result, fbcca_mat_b_thresh, fbcca_mat_time, fbcca_mat_max, fbcca_mat_rho, vec_freq, Nf, Ns,
+                 Nb)
+df_ext_cca = mk_df(ext_cca_mat_result, ext_cca_mat_b_thresh, ext_cca_mat_time, ext_cca_mat_max, ext_cca_mat_rho,
+                   vec_freq, Nf, Ns, Nb)
+df_ext_fbcca = mk_df(ext_fbcca_mat_result, ext_fbcca_mat_b_thresh, ext_fbcca_mat_time, ext_fbcca_mat_max,
+                     ext_fbcca_mat_rho, vec_freq, Nf, Ns, Nb)
 
 # convert to subject wise representation
 df_subject = pd.DataFrame()
@@ -78,7 +100,8 @@ palette = sns.color_palette('Greys')
 lLabels = ['CCA', 'FBCCA', 'Extended \n CCA', 'Extended \n FBCCA']
 fig1 = plt.figure()
 ax1 = fig1.add_subplot(111)
-sns.barplot(ax=ax1, data=df_subject[['Accuracy CCA', 'Accuracy FBCCA', 'Accuracy ext CCA', 'Accuracy ext FBCCA']], ci=95, palette='Greys',
+sns.barplot(ax=ax1, data=df_subject[['Accuracy CCA', 'Accuracy FBCCA', 'Accuracy ext CCA', 'Accuracy ext FBCCA']],
+            ci=95, palette='Greys',
             capsize=.1, orient='h')
 ax1.set_yticklabels(lLabels)
 ax1.set_xlabel('Accuracy in %')
@@ -88,7 +111,8 @@ set_size(fig1, 3, 2.2)
 
 fig2 = plt.figure()
 ax2 = fig2.add_subplot(111)
-sns.barplot(ax=ax2, data=df_subject[['Time CCA', 'Time FBCCA', 'Time ext CCA', 'Time ext FBCCA']], ci=95, palette='Greys', capsize=.1,
+sns.barplot(ax=ax2, data=df_subject[['Time CCA', 'Time FBCCA', 'Time ext CCA', 'Time ext FBCCA']], ci=95,
+            palette='Greys', capsize=.1,
             orient='h')
 ax2.set_yticklabels(lLabels)
 ax2.set_xlabel('Time elapsed in s')
@@ -98,7 +122,8 @@ set_size(fig2, 3, 2.2)
 
 fig3 = plt.figure()
 ax3 = fig3.add_subplot(111)
-sns.barplot(ax=ax3, data=df_subject[['ITR CCA', 'ITR FBCCA', 'ITR ext CCA', 'ITR ext FBCCA']], ci=95, palette='Greys', capsize=.1,
+sns.barplot(ax=ax3, data=df_subject[['ITR CCA', 'ITR FBCCA', 'ITR ext CCA', 'ITR ext FBCCA']], ci=95, palette='Greys',
+            capsize=.1,
             orient='h')
 ax3.set_yticklabels(lLabels)
 ax3.set_xlabel('ITR')

@@ -1,5 +1,5 @@
 from functions import *
-print("Extended FBCCA: Subjects: " + str(Ns) + ", Data length: " + str(N_sec))
+print("Extended FBCCA: Tag: " + sTag + ", Subjects: " + str(Ns) + ", Data length: " + str(N_sec))
 
 ### Set Working Directory
 abspath = os.path.abspath(__file__)
@@ -162,9 +162,9 @@ accuracy_drop = acc(mat_bool_thresh)
 print("Extended FBCCA: accuracy: " + str(accuracy_all))
 print("Extended FBCCA: accuracy dropped: " + str(accuracy_drop))
 
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_result_' + str(N_sec) + '_' + str(Ns)), mat_result)
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_time_' + str(N_sec) + '_' + str(Ns)), mat_time)
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_b_' + str(N_sec) + '_' + str(Ns)), mat_b)
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns)), mat_b_thresh)
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_max_' + str(N_sec) + '_' + str(Ns)), mat_max)
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_rho_' + str(N_sec) + '_' + str(Ns)), mat_rho)
+np.save(os.path.join(dir_results, 'ext_fbcca_mat_result_' + str(N_sec) + '_' + str(Ns) + '_' + sTag), mat_result)
+np.save(os.path.join(dir_results, 'ext_fbcca_mat_time_' + str(N_sec) + '_' + str(Ns) + '_' + sTag), mat_time)
+np.save(os.path.join(dir_results, 'ext_fbcca_mat_b_' + str(N_sec) + '_' + str(Ns) + '_' + sTag), mat_b)
+np.save(os.path.join(dir_results, 'ext_fbcca_mat_b_thresh_' + str(N_sec) + '_' + str(Ns) + '_' + sTag), mat_b_thresh)
+np.save(os.path.join(dir_results, 'ext_fbcca_mat_max_' + str(N_sec) + '_' + str(Ns) + '_' + sTag), mat_max)
+np.save(os.path.join(dir_results, 'ext_fbcca_mat_rho_' + str(N_sec) + '_' + str(Ns) + '_' + sTag), mat_rho)
