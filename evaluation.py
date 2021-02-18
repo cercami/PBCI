@@ -22,7 +22,6 @@ sTag = args.tag
 
 print("Evaluation: Tag: " + sTag + ", Subjects: " + str(Ns) + ", Data length: " + str(N_sec))
 
-
 ### Set Working Directory
 abspath = os.path.abspath(__file__)
 dirname = os.path.dirname(abspath)
@@ -117,10 +116,10 @@ df_subject['Time FBCCA'] = df_fbcca.groupby(['Subject']).mean()['Time'] / 1000
 df_subject['Time ext CCA'] = df_ext_cca.groupby(['Subject']).mean()['Time'] / 1000
 df_subject['Time ext FBCCA'] = df_ext_fbcca.groupby(['Subject']).mean()['Time'] / 1000
 
-df_subject['ITR CCA'] = df_subject['Accuracy CCA'].apply(itr)
-df_subject['ITR FBCCA'] = df_subject['Accuracy FBCCA'].apply(itr)
-df_subject['ITR ext CCA'] = df_subject['Accuracy ext CCA'].apply(itr)
-df_subject['ITR ext FBCCA'] = df_subject['Accuracy ext FBCCA'].apply(itr)
+df_subject['ITR CCA'] = df_subject['Accuracy CCA'].apply((lambda x: itr(x, N_sec + 0.5)))
+df_subject['ITR FBCCA'] = df_subject['Accuracy FBCCA'].apply((lambda x: itr(x, N_sec + 0.5)))
+df_subject['ITR ext CCA'] = df_subject['Accuracy ext CCA'].apply((lambda x: itr(x, N_sec + 0.5)))
+df_subject['ITR ext FBCCA'] = df_subject['Accuracy ext FBCCA'].apply((lambda x: itr(x, N_sec + 0.5)))
 
 # Plot
 palette = sns.color_palette('Greys')
