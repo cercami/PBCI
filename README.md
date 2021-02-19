@@ -46,6 +46,8 @@ PBCI/
 └── log/ # output from cluster
 ```
 
+Make sure that all these folder exists and downlad the data from [here](http://bme.elektro.dtu.dk/31567/data/assignments/SSVEP-BCI-Data/SSVEP-BCI-Data/).
+
 ## Resources
 [Lin2007] Z.  Lin,  C.  Zhang,  W.  Wu,  and  X.  Gao,  “Frequency  recognitionbased  on  canonical  correlation  analysis  for  SSVEP-Based  BCIs,”IEEE  Transactions  on  Biomedical  Engineering,  vol.  54,  no.  6,pp. 1172–1176, 2007,ISSN: 00189294
 
