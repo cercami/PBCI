@@ -87,6 +87,8 @@ pb = 0.5
 vec_weights = weight(np.arange(1, N + 1))  # weights
 num_iter = 0
 
+iir_params = dict(ftype='cheby1', btype='bandpass', output='sos', gpass=3, gstop=20, rp=3, rs=3)
+
 for s in range(0, Ns):
     mat_ind_max = np.zeros([Nf, Nb])  # index of maximum cca
     mat_bool = np.zeros([Nf, Nb])
