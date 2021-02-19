@@ -13,13 +13,14 @@ import seaborn as sns
 import numpy as np
 from sklearn.cross_decomposition import CCA
 from scipy.io import loadmat
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import os
 from datetime import datetime
 import pandas as pd
 import mne
 import sys
-
+import tikzplotlib
 
 ### Functions
 def loadData(fpath, fname):
@@ -402,6 +403,24 @@ def plot_trial(results):
     fig.tight_layout()
     return fig, ax
 
+
+##Style und Co
+def setPgf(bDoPgf):
+    if bDoPgf:
+        mpl.use("pgf")
+        mpl.rcParams.update({
+            "savefig.dpi": 300,
+            "pgf.texsystem": "pdflatex",
+            'font.family': 'Latin Modern Roman',
+            'text.usetex': True,
+            'pgf.rcfonts': False,
+            "pgf.preamble": [
+                r'\usepackage{lmodern}'
+                r"\usepackage[utf8x]{inputenc}",
+                r"\usepackage[T1]{fontenc}",
+                r"\usepackage{cmbright}",
+            ]
+        })
 
 ### Lambdas
 acc = lambda mat: np.sum(mat[mat > 0]) / (np.size(mat) - np.size(mat[mat == -1])) * 100
