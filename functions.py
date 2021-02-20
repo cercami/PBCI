@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
+# -*- coding: iso-8859-1 -*-
 """
-# Created by Ruben DÃ¶rfel at 08.02.2021
+# Created by Ruben Dörfel at 08.02.2021
 
 Feature: Function
 This File contains functions that are often used. It is to be imported at the beginning of all scripts.
@@ -411,15 +411,16 @@ def setPgf(bDoPgf):
         mpl.rcParams.update({
             "savefig.dpi": 300,
             "pgf.texsystem": "pdflatex",
-            'font.family': 'Latin Modern Roman',
+            "font.family": "serif",
             'text.usetex': True,
             'pgf.rcfonts': False,
-            "pgf.preamble": [
-                r'\usepackage{lmodern}'
-                r"\usepackage[utf8x]{inputenc}",
-                r"\usepackage[T1]{fontenc}",
-                r"\usepackage{cmbright}",
-            ]
+            "axes.labelsize": 8,  # LaTeX default is 10pt font.
+            "legend.fontsize": 8,  # Make the legend/label fonts a little smaller
+            "xtick.labelsize": 8,
+            "ytick.labelsize": 8,
+            "xtick.labelsize": 8,
+            "ytick.labelsize": 8,
+            "pgf.preamble": r"\usepackage[utf8x]{inputenc} \usepackage[T1]{fontenc} \usepackage{cmbright}"
         })
 
 ### Lambdas

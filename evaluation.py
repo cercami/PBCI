@@ -42,10 +42,10 @@ vec_phase = dict_freq_phase['phases'][0]
 
 # list_subject_data = loadData(dirname, '.mat')  # load all subject data
 
-sTag = '_' + str(sTag)
+sNs = '_' + str(Ns)
 sSec = '_' + str(N_sec)
-if sTag != "":
-    sNs = '_' + str(Ns)
+if sTag != '':
+    sTag = '_' + str(sTag)
 
 cca_mat_result = np.load(
     os.path.join(dir_results, 'cca_mat_result' + sSec + sNs + sTag + '.npy'))
@@ -141,6 +141,12 @@ set_style(fig1, ax1)
 set_size(fig1, 2.7, 3)
 plt.setp(ax1.get_xticklabels(), rotation=45, ha='right')
 
+fig1.savefig(os.path.join(dir_figures, 'accuracy' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig1.savefig(os.path.join(dir_figures, 'accuracy' + sSec + sNs + sTag + '.png'), dpi=300)
+if bPgf:
+    fig1.savefig(os.path.join(dir_figures, 'accuracy' + sSec + sNs + sTag + '.pgf'))
+    plt.close(fig1)
+
 setPgf(bPgf)
 fig2 = plt.figure()
 ax2 = fig2.add_subplot(111)
@@ -152,6 +158,12 @@ ax2.set_ylabel('Time elapsed in s')
 set_style(fig2, ax2)
 set_size(fig2, 2.7, 3)
 plt.setp(ax2.get_xticklabels(), rotation=45, ha='right')
+
+fig2.savefig(os.path.join(dir_figures, 'time' + sSec + sNs + sTag + '.pdf'), dpi=300)
+fig2.savefig(os.path.join(dir_figures, 'time' + sSec + sNs + sTag + '.png'), dpi=300)
+if bPgf:
+    fig2.savefig(os.path.join(dir_figures, 'time' + sSec + sNs + sTag + '.pgf'), dpi=300)
+    plt.close(fig2)
 
 setPgf(bPgf)
 fig3 = plt.figure()
@@ -165,17 +177,11 @@ set_style(fig3, ax3)
 set_size(fig3, 2.7, 3)
 plt.setp(ax3.get_xticklabels(), rotation=45, ha='right')
 
-fig1.savefig(os.path.join(dir_figures, 'accuracy' + sSec + sNs + sTag + '.pdf'), dpi=300)
-fig1.savefig(os.path.join(dir_figures, 'accuracy' + sSec + sNs + sTag + '.png'), dpi=300)
-fig2.savefig(os.path.join(dir_figures, 'time' + sSec + sNs + sTag + '.pdf'), dpi=300)
-fig2.savefig(os.path.join(dir_figures, 'time' + sSec + sNs + sTag + '.png'), dpi=300)
 fig3.savefig(os.path.join(dir_figures, 'itr' + sSec + sNs + sTag + '.pdf'), dpi=300)
 fig3.savefig(os.path.join(dir_figures, 'itr' + sSec + sNs + sTag + '.png'), dpi=300)
-
 if bPgf:
-    fig1.savefig(os.path.join(dir_figures, 'accuracy' + sSec + sNs + sTag + '.pgf'))
-    fig2.savefig(os.path.join(dir_figures, 'time' + sSec + sNs + sTag + '.pgf'), dpi=300)
     fig3.savefig(os.path.join(dir_figures, 'itr' + sSec + sNs + sTag + '.pgf'), dpi=300)
+    plt.close(fig3)
 
 print("=====================================")
 print(
