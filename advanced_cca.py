@@ -4,7 +4,7 @@ import argparse
 ### Parser
 parser = argparse.ArgumentParser(description='Add some integers.')
 
-parser.add_argument('--length', action='store', type=int, default=5,
+parser.add_argument('--length', action='store', type=float, default=5,
                     help='Length of data to take into account (0,5].')
 
 parser.add_argument('--subjects', action='store', type=int, default=35,
