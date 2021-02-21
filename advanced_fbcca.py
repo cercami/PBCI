@@ -86,52 +86,49 @@ bw = (f_high - f_low) / N  # band with of sub bands
 vec_weights = weight(np.arange(1, N + 1))  # weights
 num_iter = 0
 
+num_iter = 0
 mat_processed = np.zeros([Ns, Nb, Nf, 9, N_stim])
 for s in range(0, Ns):
     for b in range(0, Nb):
         for f in range(0, Nf):
             # Referencing and baseline correction
-            mat_data = preprocess(list_subject_data[s][:, :, f, b], vec_ind_el, ind_ref_el, N_start, N_stop)
-            mat_processed[s, b, f, :, :] = mat_data
+            mat_processed[s, b, f, :, :] = preprocess(list_subject_data[s][:, :, f, b], vec_ind_el, ind_ref_el, N_start, N_stop)
 
 for s in range(0, Ns):
     mat_ind_max = np.zeros([Nf, Nb])  # index of maximum cca
-    mat_time = np.zeros([Nf, Nb], dtype='object')  # matrix to store time needed
     mat_bool = np.zeros([Nf, Nb])
     mat_bool_thresh = np.zeros([Nf, Nb])
     mat_rho = np.zeros([Nf, Nb])
     mat_max = np.zeros([Nf, Nb])
+    mat_time = np.zeros([Nf, Nb], dtype='object')  # matrix to store time needed
 
     t_start = datetime.now()
+
+    # average over subjects
     for b in range(0, Nb):
 
         # average over subjects
         mat_blocks_dropped = np.delete(mat_processed[s], b, axis=0)
-        mat_x_train = np.mean(mat_blocks_dropped, axis=0)
+        mat_X_train = np.mean(mat_blocks_dropped, axis=0)
 
         for f in range(0, Nf):
             t_trial_start = datetime.now()
 
-            # Referencing and baseline correction
-            mat_data = mat_processed[s, b, f, :, :]
-            mat_data_train = mat_x_train[f, :, :]
             # Create Filter Bank
+            mat_data = mat_processed[s, b, f, :, :]
             mat_filter = np.zeros([N, mat_data.shape[0], mat_data.shape[1]])
-            mat_filter_train = np.zeros([N, mat_data_train.shape[0], mat_data_train.shape[1]])
+            mat_filter_train = np.zeros([N, mat_data.shape[0], mat_data.shape[1]])
 
-            # create N sub-bands
             for n in range(0, N):
                 mat_filter[n] = mne.filter.filter_data(mat_data, fs, l_freq=f_low + n * bw, h_freq=f_high, method='fir',
                                                        l_trans_bandwidth=2, h_trans_bandwidth=2,
                                                        phase='zero-double', verbose=False)
-                mat_filter_train[n] = mne.filter.filter_data(mat_data_train, fs, l_freq=f_low + n * bw, h_freq=f_high,
-                                                             method='fir',
+                mat_filter_train[n] = mne.filter.filter_data(mat_data, fs, l_freq=f_low + n * bw, h_freq=f_high, method='fir',
                                                              l_trans_bandwidth=2, h_trans_bandwidth=2,
                                                              phase='zero-double', verbose=False)
 
+            # Apply CCA
             vec_rho = np.zeros(Nf)
-
-            # Apply advanced FBCCA
             for k in range(0, Nf):
                 vec_rho_k = np.zeros(N)
                 for n in range(N):
@@ -141,21 +138,17 @@ for s in range(0, Ns):
 
             t_trial_end = datetime.now()
             mat_time[f, b] = t_trial_end - t_trial_start
-
-            num_iter = num_iter + 1
             mat_rho[f, b] = np.max(vec_rho)
             mat_ind_max[f, b] = np.argmax(vec_rho)  # get index of maximum -> frequency -> letter
+            num_iter = num_iter + 1
 
             # apply threshold
-            for data in mat_filter:
-                mat_stand = standardize(data)
-                if np.max(np.abs(mat_stand)) > mat_max[f, b]:
-                    mat_max[f, b] = np.max(np.abs(mat_stand))
-
-                thresh = 6
-                if np.max(np.abs(mat_stand)) > thresh:
-                    # minus 1 if it is going to be removed
-                    mat_bool_thresh[f, b] = -1
+            mat_stand = standardize(mat_filter)
+            mat_max[f, b] = np.max(np.abs(mat_stand))
+            thresh = 6
+            if np.max(np.abs(mat_stand)) > thresh:
+                # minus 1 if it is going to be removed
+                mat_bool_thresh[f, b] = -1
 
     list_result.append(mat_ind_max)  # store results per subject
     list_time.append(mat_time)  # store results per subject

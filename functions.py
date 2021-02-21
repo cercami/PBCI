@@ -176,17 +176,16 @@ def apply_ext_fbcca(X, Y, X_Train):
     cca2 = CCA(n_components=n_comp)
     cca3 = CCA(n_components=n_comp)
     cca4 = CCA(n_components=n_comp)
-    cca5 = CCA(n_components=n_comp)
 
-    cca1.fit(X.transpose(), Y.transpose())  # XY
+    cca1.fit(X.transpose(), Y.transpose())
     x, y = cca1.transform(X.transpose(), Y.transpose())
     rho_1 = np.diag(np.corrcoef(x, y, rowvar=False)[:n_comp, n_comp:])
-    cca2.fit(X.transpose(), X_Train.transpose())  # XX^
+    cca2.fit(X.transpose(), X_Train.transpose())
     w_xxt_x = cca2.x_weights_
     w_xxt_y = cca2.y_weights_
-    cca3.fit(X.transpose(), Y.transpose())  # XY
+    cca3.fit(X.transpose(), Y.transpose())
     w_xy = cca3.x_weights_
-    cca4.fit(X_Train.transpose(), Y.transpose())  # X^Y
+    cca4.fit(X_Train.transpose(), Y.transpose())
     w_xty = cca4.x_weights_
     rho_2 = np.diag(
         np.corrcoef(np.matmul(X.transpose(), w_xxt_x), np.matmul(X_Train.transpose(), w_xxt_x), rowvar=False)[:n_comp,
