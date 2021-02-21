@@ -94,7 +94,6 @@ ext_fbcca_mat_time = np.load(
     allow_pickle=True)
 
 ## Convert to pandas dataframe
-Ns = 35
 Nb = 6
 Nf = 40
 fs = 250  # sampling frequency in hz
@@ -213,6 +212,7 @@ print("ITR Extended CCA Mean: " + str(df_subject['ITR ext CCA'].mean()) + ", Std
 print("ITR Extended FBCCA Mean: " + str(df_subject['ITR ext FBCCA'].mean()) + ", Std: " + str(
     df_subject['ITR ext FBCCA'].std()))
 print("=====================================")
+
 #
 # fig4, ax4 = plot_trial(cca_mat_result)
 # fig4.savefig(os.path.join(dir_figures, 'cca_freq' + sSec + sNs + sTag + '.pdf'), dpi=300)

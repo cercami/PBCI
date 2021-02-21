@@ -423,6 +423,17 @@ def setPgf(bDoPgf):
             "pgf.preamble": r"\usepackage[utf8x]{inputenc} \usepackage[T1]{fontenc} \usepackage{cmbright}"
         })
 
+
+def figsize(scale):
+    fig_width_pt = 345./2                          # Get this from LaTeX using \the\textwidth
+    inches_per_pt = 1.0/72.27                       # Convert pt to inch
+    golden_mean = (np.sqrt(5.0)-1.0)/2.0            # Aesthetic ratio (you could change this)
+    fig_width = fig_width_pt*inches_per_pt*scale    # width in inches
+    fig_height = fig_width*golden_mean              # height in inches
+    fig_size = [fig_width,fig_height]
+    return fig_size
+
+
 ### Lambdas
 acc = lambda mat: np.sum(mat[mat > 0]) / (np.size(mat) - np.size(mat[mat == -1])) * 100
 standardize = lambda mat: (mat - np.mean(mat, axis=1)[:, None]) / np.std(mat, axis=1)[:, None]
