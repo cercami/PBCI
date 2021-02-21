@@ -144,10 +144,10 @@ accuracy_drop = acc(mat_b_thresh)
 print("CCA: accuracy: " + str(accuracy_all))
 print("CCA: accuracy dropped: " + str(accuracy_drop))
 
-sTag = '_' + str(sTag)
-sSec = '_' + str(N_sec)
-if sTag != "":
-    sNs = '_' + str(Ns)
+sNs = '_s' + str(Ns)
+sSec = '_l' + str(N_sec).replace('.', '_')
+if sTag != '':
+    sTag = '_' + str(sTag)
 
 np.save(os.path.join(dir_results, 'cca_mat_result' + sSec + sNs + sTag), mat_result)
 np.save(os.path.join(dir_results, 'cca_mat_time' + sSec + sNs + sTag), mat_time)

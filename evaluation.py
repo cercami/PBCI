@@ -42,8 +42,8 @@ vec_phase = dict_freq_phase['phases'][0]
 
 # list_subject_data = loadData(dirname, '.mat')  # load all subject data
 
-sNs = '_' + str(Ns)
-sSec = '_' + str(N_sec)
+sNs = '_s' + str(Ns)
+sSec = '_l' + str(N_sec).replace('.', '_')
 if sTag != '':
     sTag = '_' + str(sTag)
 
