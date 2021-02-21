@@ -181,7 +181,3 @@ if sTag != "":
 
 np.save(os.path.join(dir_results, 'ext_fbcca_mat_result' + sSec + sNs + sTag), mat_result)
 np.save(os.path.join(dir_results, 'ext_fbcca_mat_time' + sSec + sNs + sTag), mat_time)
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_b' + sSec + sNs + sTag), mat_b)
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_b_thresh' + sSec + sNs + sTag), mat_b_thresh)
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_max' + sSec + sNs + sTag), mat_max)
-np.save(os.path.join(dir_results, 'ext_fbcca_mat_rho' + sSec + sNs + sTag), mat_rho)
